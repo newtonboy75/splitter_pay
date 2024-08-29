@@ -1,4 +1,5 @@
 import { useLocation } from "react-router-dom";
+import { formatDate } from "../utils/formatDate";
 
 const Recents = () => {
   const paymentDetails = useLocation();
@@ -37,19 +38,27 @@ const Recents = () => {
                       Payment ID: {paymentDetails.state.payment_id}
                     </li>
                     <li className="font-medium">
-                      Paid on: {formattedDateTime}
+                      Completed on: {formattedDateTime}
                     </li>
                   </ul>
 
                   <hr className="border-gray-300 my-4" />
 
-                  <ul className="text-left">
-                    <h1 className="text-lg">Splitters</h1>
-                    <li className="font-medium">
-                      Payment ID: {paymentDetails.state.payment_id}
+                  <ul className="text-left text-sm">
+                    <li>
+                      <h1 className="text-sm font-medium">Splitters</h1>
                     </li>
-                    <li className="font-medium">
-                      Paid on: {formattedDateTime}
+                    <li className="p-2">
+                      {paymentDetails.state.splitters.map((splitter: any) => {
+                        return (
+                          <>
+                            <div className="p-1">
+                              {splitter.name} | {splitter.email}
+                            </div>
+                            <div className="p-1">Paid on {formatDate(splitter.date_paid)}</div>
+                          </>
+                        );
+                      })}
                     </li>
                   </ul>
                 </div>

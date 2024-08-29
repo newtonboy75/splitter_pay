@@ -3,6 +3,7 @@ import DialogAlert from "../components/Payments/DialogAlert";
 import { useState } from "react";
 import { useAuthInterceptor } from "../hooks/useAuthInterceptor";
 import Toast from "../components/Main/Toast";
+import { formatDate } from "../utils/formatDate";
 
 const ActiveDetails = () => {
   const paymentDetails = useLocation();
@@ -12,14 +13,7 @@ const ActiveDetails = () => {
   const [openToast, setOpenToast] = useState(false)
   const [toastInfo, setToastInfo] = useState("");
 
-  const formatDate = (datetime: string | number | Date) => {
-    const date = new Date(datetime);
-    const formattedDateTime = date
-      .toISOString()
-      .replace("T", " ")
-      .split(".")[0];
-    return formattedDateTime;
-  };
+  
 
   const handleCancellation = () => {
     setShowDialogAlert(true)
