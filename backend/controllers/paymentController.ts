@@ -135,23 +135,37 @@ export const paySplit = async (req: Request, res: Response) => {
 
     getWss().clients.forEach((client: any) => {
       if (client.readyState === client.OPEN) {
-        console.log("update successful");
+        console.log("Payment successful");
         client.send(JSON.stringify(message));
       }
     });
   }
 
-  res.status(200).json("yes");
+  res.status(200).json("Payment successful");
 };
 
 export const removeSplit = async (req: Request, res: Response) => {
-  console.log(req.params.paymentId);
+  // console.log(req.params.paymentId);
+  // console.log(req.body);
   const paymentId = req.params.paymentId;
+  const data = req.body;
   try {
     const deletedDocument = await Payment.findByIdAndDelete(paymentId);
     if (deletedDocument) {
-      console.log("Document deleted:", deletedDocument);
       res.status(200).json("Split has been deleted");
+
+      const message = {
+        data: data,
+        to: "splitters_cancelled",
+        disposition: "payment_cancelled",
+      };
+
+      getWss().clients.forEach((client: any) => {
+        if (client.readyState === client.OPEN) {
+          console.log("update successful");
+          client.send(JSON.stringify(message));
+        }
+      });
     } else {
       console.log("No document found with the given ID.");
     }

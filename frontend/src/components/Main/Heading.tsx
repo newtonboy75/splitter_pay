@@ -1,9 +1,11 @@
 import { useState } from "react";
 import logo from "../../assets/Klearly-Logo-@2x.webp";
 import SplitNewModal from "../Payments/SplitNewModal";
+import { useLocation } from "react-router-dom";
 
 const Heading = () => {
   const [showModal, setShowModal] = useState<boolean>(false);
+  const { pathname } = useLocation();
 
   const handleLogout = () => {
     localStorage.removeItem("userData");
@@ -31,18 +33,21 @@ const Heading = () => {
           </div>
 
           <div className="flex items-center ml-auto space-x-6">
-            <a
-              href="#"
-              className="hover:text-[#007bff] text-gray-600 block font-bold text-[15px]"
-            >
-              <button
-                type="button"
-                onClick={() => setShowModal(true)}
-                className="px-5 py-2.5 rounded-full text-white text-sm tracking-wider font-medium border border-current outline-none bg-orange-700 hover:bg-orange-800 active:bg-orange-700"
+            {pathname === "/" && (
+              <a
+                href="#"
+                className="hover:text-[#007bff] text-gray-600 block font-bold text-[15px]"
               >
-                New Split
-              </button>
-            </a>
+                <button
+                  type="button"
+                  onClick={() => setShowModal(true)}
+                  className="px-5 py-2.5 rounded-full text-white text-sm tracking-wider font-medium border border-current outline-none bg-orange-700 hover:bg-orange-800 active:bg-orange-700"
+                >
+                  New Split
+                </button>
+              </a>
+            )}
+
             <a onClick={handleLogout} href="#">
               <svg
                 className="h-8 w-8 text-orange-700"

@@ -87,6 +87,23 @@ const Home = () => {
           }
 
           setTriggerRefresh(Math.random());
+        } else if(data.disposition === "payment_cancelled") {
+          console.log(data)
+          const initiator = data.data.splitters.splitters.filter((splitter: any) => {
+            return splitter
+          })
+          console.log(initiator)
+
+          const split_user = data.data.splitters.splitters.filter((splitter: { email: any; }) => {
+            return splitter.email === current_user.email
+          })
+
+
+          setToastInfo(`${initiator[0].name} cancelled ${data.data.splitters.name} and don't want to split the bill anymore.`);
+          setOpenToast(true);
+          setTriggerRefresh(Math.random());
+          console.log(split_user)
+
         }
       }
     };
