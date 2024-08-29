@@ -1,0 +1,20 @@
+#root {
+  height: 100%;
+  margin: 0px;
+  padding: 0px;
+  text-align: center;
+  background: rgb(34,25,255);
+  background: linear-gradient(141deg, rgba(34,25,255,0.8786108193277311) 35%, rgba(181,0,255,0.4500393907563025) 100%);
+  background-size: 100%;
+  background-repeat: repeat;
+}
+
+body, html{
+ 
+}
+
+.main-div{
+  max-width: 1080px;
+  height: 100vh;
+  margin: 0 auto;
+}

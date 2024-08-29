@@ -1,0 +1,34 @@
+Project: Splitter Pay for Klearly
+Author: Newton Tugadi
+
+Front End Tools:
+
+    1. Vite React JS / Typescript
+    2. Axios
+    3. ContextAPI and useReducer for states management
+
+Back End:
+
+    1. NodeJS
+    2. Express
+    3. MongoDB (Atlas)
+    4. Mongoose
+
+
+Setup (For testing purposes only):
+
+    1. Clone this repository: open your terminal and type: git git@github.com:newtonboy75/splitter_pay.git
+    2. cd to backend, type: npm install, please wait for all dependencies to be installed
+    3. type: npm run dev
+    4. cd to frontend, type: npm install
+    5. type: npm run build
+    6. type: npm run preview
+    7. on your browser, go to http://localhost:4173/
+
+Demo on how to use: 
+
+   Link to the screen recording: https://drive.google.com/file/d/1EeP_O81pmj5ujZOblQXtcosW2E-lRCvd/view?usp=sharing
+
+
+Thank you and looking forward to talking to you!!!
+    
