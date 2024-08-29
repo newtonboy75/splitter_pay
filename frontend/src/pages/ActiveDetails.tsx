@@ -1,8 +1,16 @@
 import { useLocation } from "react-router-dom";
+import DialogAlert from "../components/Payments/DialogAlert";
+import { useState } from "react";
+import { useAuthInterceptor } from "../hooks/useAuthInterceptor";
+import Toast from "../components/Main/Toast";
 
 const ActiveDetails = () => {
   const paymentDetails = useLocation();
   const splitters = Array.from(paymentDetails.state.splitters);
+  const [showDialogAert, setShowDialogAlert] = useState(false)
+  const interceptor = useAuthInterceptor();
+  const [openToast, setOpenToast] = useState(false)
+  const [toastInfo, setToastInfo] = useState("");
 
   const formatDate = (datetime: string | number | Date) => {
     const date = new Date(datetime);
@@ -13,7 +21,46 @@ const ActiveDetails = () => {
     return formattedDateTime;
   };
 
+  const handleCancellation = () => {
+    setShowDialogAlert(true)
+  }
+
+  const handleOption = async (option: boolean) => {
+    console.log(paymentDetails)
+    if(option === false){
+      setShowDialogAlert(false)
+    }else{
+      
+      const PAYMENTS_URL = `/api/payments/${paymentDetails.state._id}/delete`;
+
+      try {
+        const response = await interceptor.delete(
+          PAYMENTS_URL, 
+        );
+        if (response.status === 200) {
+          console.log(response.data)
+          setShowDialogAlert(false)
+          setToastInfo(
+            `Split has been deleted.`
+          );
+          setOpenToast(true);
+        }
+      } catch (err: any) {
+        if (err.response?.status === 401) {
+          console.log("Unauthorized");
+        } else {
+          console.log(err);
+        }
+      }
+    }
+  }
+
+  const handleCloseToast = () => {
+    setOpenToast(false);
+  };
+
   return (
+    <>
     <div className="h-screen pt-32 lg:w-1/2 mx-auto">
       <a
         className="text-left text-white float-left ml-6"
@@ -21,7 +68,7 @@ const ActiveDetails = () => {
       >
         &lsaquo; Back
       </a>
-      <div className="p-8 font-[sans-serif] ">
+      <div className="p-4 font-[sans-serif] ">
         <h1 className="text-2xl text-white font-bold mb-6">Active Split</h1>
 
         <div className="text-left mx-auto">
@@ -38,7 +85,7 @@ const ActiveDetails = () => {
                         <p className="text-sm text-gray-500">
                           Initiated on {formatDate(paymentDetails.state.date)}
                         </p>
-                        <ul className="mt-6">
+                        <ul className="mt-6 mb-4 w-full">
                           {splitters.map((splitter: any) => {
                             return (
                               <div>
@@ -71,17 +118,35 @@ const ActiveDetails = () => {
                               </div>
                             );
                           })}
+                          <li>
+                            <div className="flex justify-center items-center ml-12">
+                              <button
+                              onClick={handleCancellation}
+                                type="button"
+                                className="px-5 py-2.5 rounded-full text-white text-sm tracking-wider font-medium border border-current outline-none bg-red-700 hover:bg-red-800 active:bg-red-700"
+                              >
+                                Cancel transaction
+                              </button>
+                            </div>
+                          </li>
                         </ul>
+                        
                       </div>
                     </div>
                   </li>
                 </ul>
+                
               </div>
             </div>
           </div>
         </div>
       </div>
+      
     </div>
+      {showDialogAert && <DialogAlert handleOption={handleOption} />}
+      {openToast && <Toast info={toastInfo} closeToast={handleCloseToast} />}
+    </>
+    
   );
 };
 

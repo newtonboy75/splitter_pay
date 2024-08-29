@@ -5,7 +5,7 @@ const Toast = ({ info, closeToast }: any) => {
 
   const handleCloseToast = () => {
     closeToast();
-    if (pathname.includes("/payment/")) {
+    if (pathname.includes("/payment/") || pathname.includes("/active/")) {
       location.href = "/";
     }
   };

@@ -76,7 +76,7 @@ export const savePayment = async (req: Request, res: Response) => {
     const message = {
       to: "splitters",
       data: transaction,
-      disposition: "split_invite"
+      disposition: "split_invite",
     };
 
     getWss().clients.forEach((client: any) => {
@@ -120,8 +120,15 @@ export const paySplit = async (req: Request, res: Response) => {
 
   if (payment) {
     const message = {
-    initiator_id,
-      data: {payee: payee_name, share_amount: share_amount, name: name, initiator: id, email: email, initiator_id: initiator_id},
+      initiator_id,
+      data: {
+        payee: payee_name,
+        share_amount: share_amount,
+        name: name,
+        initiator: id,
+        email: email,
+        initiator_id: initiator_id,
+      },
       to: "initiator",
       disposition: "payment_successful",
     };
@@ -135,4 +142,20 @@ export const paySplit = async (req: Request, res: Response) => {
   }
 
   res.status(200).json("yes");
+};
+
+export const removeSplit = async (req: Request, res: Response) => {
+  console.log(req.params.paymentId);
+  const paymentId = req.params.paymentId;
+  try {
+    const deletedDocument = await Payment.findByIdAndDelete(paymentId);
+    if (deletedDocument) {
+      console.log("Document deleted:", deletedDocument);
+      res.status(200).json("Split has been deleted");
+    } else {
+      console.log("No document found with the given ID.");
+    }
+  } catch (error) {
+    console.error("Error deleting document:", error);
+  }
 };
