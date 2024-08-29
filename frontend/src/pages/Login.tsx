@@ -34,7 +34,6 @@ const Login = () => {
       const id = response?.data.id
 
       if(response.status === 200){
-        console.log(response)
         setAuth({id, name, email, password, accessToken, refreshToken})
         return navigate('/')
       }
@@ -50,7 +49,6 @@ const Login = () => {
 
   useEffect(() => {
     userRef?.current?.focus();
-    console.log(email);
   }, []);
 
   useEffect(() => {

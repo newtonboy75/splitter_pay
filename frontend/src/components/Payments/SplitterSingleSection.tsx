@@ -7,7 +7,6 @@ const SplitterSingleSection: React.FC<SplitterSingleSectionProps> = ({
   removeSplitItem,
 }) => {
   const currentUser = getToken();
-  console.log('dito po', splitDetails)
 
   const handleRemoveItem = () => {
     removeSplitItem(splitDetails.email);

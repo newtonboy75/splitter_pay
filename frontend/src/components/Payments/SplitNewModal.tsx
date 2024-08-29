@@ -76,6 +76,8 @@ const SplitNewModal = ({ modalShow }: Props) => {
 
   const handleCloseToast = () => {
     modalShow();
+    setSplitError("");
+    setAmmoutError("")
   }
 
   //called for the first time
@@ -83,6 +85,8 @@ const SplitNewModal = ({ modalShow }: Props) => {
     const value = event.currentTarget.value;
 
     //show the current user
+    setSplitError("");
+    setAmmoutError("")
     setShowSplitterSingle(true);
 
     //get the original amount
@@ -101,6 +105,7 @@ const SplitNewModal = ({ modalShow }: Props) => {
     let email = emRef.current?.value!;
 
     setSplitError("");
+    setAmmoutError("")
 
     setOtherSplitters({
       name: uname,
@@ -115,6 +120,7 @@ const SplitNewModal = ({ modalShow }: Props) => {
   }) => {
     setServiceName(event.currentTarget.value);
     setSplitError("");
+    setAmmoutError("")
   };
 
   const saveNewSplitter = () => {
@@ -124,7 +130,10 @@ const SplitNewModal = ({ modalShow }: Props) => {
       regexEmail.test(emRef.current!.value) === false
     ) {
       setSplitError("Name or email address is required.");
-    } else {
+    
+    setAmmoutError("")
+    } 
+    else {
       dispatch({
         type: "ADD_USER",
         value: otherSplitters,
@@ -152,6 +161,8 @@ const SplitNewModal = ({ modalShow }: Props) => {
 
   //remove a user from state
   const handleRemoveSplitter = (item: string) => {
+    setSplitError("");
+    setAmmoutError("")
     dispatch({
       type: "REMOVE_USER",
       value: item,
@@ -173,7 +184,9 @@ const SplitNewModal = ({ modalShow }: Props) => {
       servProd.current?.value === ""
     ) {
       setAmmoutError("Product/service and Amount are required.");
-    } else {
+    } else if(splitters1.length <= 1){
+      setAmmoutError("Please add at least one splitter.");
+    }else {
 
 
       const PAYMENTS_URL = "/api/payments";
@@ -205,6 +218,7 @@ const SplitNewModal = ({ modalShow }: Props) => {
 
   useEffect(() => {
     setSplitError("");
+    setAmmoutError("")
   }, [showNewSplitCard]);
 
   return (
@@ -266,8 +280,8 @@ const SplitNewModal = ({ modalShow }: Props) => {
                   </div>
                 );
               })}
-
-              <div className="flex justify-center mt-3" title="Add Splitter">
+              {
+                !showNewSplitCard && <div className="flex justify-center mt-3 hover:cursor-pointer" title="Add Splitter">
                 <svg
                   width="46px"
                   height="46px"
@@ -312,6 +326,8 @@ const SplitNewModal = ({ modalShow }: Props) => {
                   </g>
                 </svg>
               </div>
+              }
+              
             </>
           )}
         </div>
