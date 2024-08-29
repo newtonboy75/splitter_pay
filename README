@@ -18,7 +18,7 @@ Back End:
 Setup (For testing purposes only):
 
     1. Clone this repository: open your terminal and type: git git@github.com:newtonboy75/splitter_pay.git
-    2. cd to backend, type: npm install, please wait for all dependencies to be installed
+    2. cd to backend, type: npm install, please wait for all dependencies to be installed, .env file sent through email
     3. type: npm run dev
     4. cd to frontend, type: npm install
     5. type: npm run build
