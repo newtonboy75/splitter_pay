@@ -3,7 +3,7 @@ import { formatDate } from "../utils/formatDate";
 
 const Recents = () => {
   const paymentDetails = useLocation();
-  const formattedDateTime = formatDate(paymentDetails.state.date_paid);
+  const formattedDateTime = formatDate(paymentDetails.state?.date_paid) ?? "";
 
   return (
     <div className="font-[sans-serif] bg-gradient-to-tr from-gray-200 via-gray-100 to-gray-50 h-screen pt-28 lg:pt-36 lg:px-52 lg:pr-52">
@@ -54,7 +54,9 @@ const Recents = () => {
                             <div className="p-1">
                               {splitter.name} | {splitter.email}
                             </div>
-                            <div className="p-1">Paid on {formatDate(splitter.date_paid)}</div>
+                            <div className="p-1">
+                              Paid on {formattedDateTime}
+                            </div>
                           </>
                         );
                       })}
