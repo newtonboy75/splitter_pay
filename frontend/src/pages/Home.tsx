@@ -92,66 +92,42 @@ const Home = () => {
 
   //get all recent splits
   useEffect(() => {
-    const getAllPayments = async () => {
-      const PAYMENTS_URL = `/api/payments?status=active&initiator=${current_user.id}`;
-      const allPaymentsList = await apiRequest(interceptor, PAYMENTS_URL);
+    const endPoints = [
+      {
+        url: `/api/payments?status=active&initiator=${current_user.id}`,
+        toState: "active",
+      },
+      {
+        url: `/api/payments?status=paid&initiator=${current_user.id}`,
+        toState: "paid",
+      },
+      {
+        url: `/api/payments?status=toPay&email=${current_user.email}`,
+        toState: "topay",
+      },
+      {
+        url: `/api/payments?status=invited&email=${current_user.email}`,
+        toState: "invited",
+      },
+    ];
 
-      if (allPaymentsList?.status === 200) {
-        const list = allPaymentsList.data.reverse();
-        //console.log(list);
-        setActiveSplitList(list);
+    endPoints.map(async (endPoint) => {
+      const request = await apiRequest(interceptor, endPoint.url);
+
+      if (request?.status === 200) {
+        const list = request.data.reverse();
+
+        if (endPoint.toState === "active") {
+          setActiveSplitList(list); //save all active splits
+        } else if (endPoint.toState === "paid") {
+          setPaidSplitList(list); //save all completed splits
+        } else if (endPoint.toState === "topay") {
+          setSplitsToPay(list); //save all pending for payment
+        } else {
+          setInvitedToPay(list); //save all new splits
+        }
       }
-    };
-
-    getAllPayments();
-  }, [triggerRefresh]);
-
-  //Get all completed split transactions
-  useEffect(() => {
-    const PAYMENTS_URL =`/api/payments?status=paid&initiator=${ current_user.id}`
-
-    const getAllPaidSplits = async () => {
-      const allPaymentsList = await apiRequest(interceptor, PAYMENTS_URL);
-
-      if (allPaymentsList?.status === 200) {
-        const list = allPaymentsList.data.reverse();
-        setPaidSplitList(list);
-      }
-    };
-
-    getAllPaidSplits();
-  }, [triggerRefresh]);
-
-  //get all that needs payment
-  useEffect(() => {
-    const PAYMENTS_URL = `/api/payments?status=toPay&email=${current_user.email}`;
-
-    const getAllSplitsToPay = async () => {
-      const allPaymentsList = await apiRequest(interceptor, PAYMENTS_URL);
-
-      if (allPaymentsList?.status === 200) {
-        const list = allPaymentsList.data.reverse();
-        setSplitsToPay(list);
-      }
-    };
-
-    getAllSplitsToPay();
-  }, [triggerRefresh]);
-
-  //get all splits sent to you for a split
-  useEffect(() => {
-    const PAYMENTS_URL = `/api/payments?status=invited&email=${current_user.email}`;
-
-    const getAllSplitsInvitedToPay = async () => {
-      const allPaymentsList = await apiRequest(interceptor, PAYMENTS_URL);
-
-      if (allPaymentsList?.status === 200) {
-        const list = allPaymentsList.data.reverse();
-        setInvitedToPay(list);
-      }
-    };
-
-    getAllSplitsInvitedToPay();
+    });
   }, [triggerRefresh]);
 
   const handleCloseToast = () => {
