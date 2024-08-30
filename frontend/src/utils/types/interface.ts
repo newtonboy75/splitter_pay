@@ -32,3 +32,9 @@ export interface SplitterSingleSectionProps {
   splitDetails: SplitDetails;
   removeSplitItem: (email: string) => void;
 }
+
+export type WebSocketHook = {
+  sendMessage: (message: string) => void;
+  lastMessage: string | any | null;
+  readyState: number;
+};

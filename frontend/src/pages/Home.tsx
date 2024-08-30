@@ -1,4 +1,4 @@
-import { useState, useEffect, useLayoutEffect } from "react";
+import { useState, useEffect } from "react";
 import SplitInvite from "../components/Payments/SplitInvite";
 import SplitsActive from "../components/Payments/SplitsActive";
 import SplitsRecent from "../components/Payments/SplitsRecent";
@@ -6,45 +6,35 @@ import { useAuthInterceptor } from "../hooks/useAuthInterceptor";
 import { getToken } from "../utils/saveAuth";
 import SplitsRecentInvites from "../components/Payments/SplitsRecentInvites";
 import Toast from "../components/Main/Toast";
+import useWebSocket from "../hooks/useWebSocket";
 
 const Home = () => {
   const interceptor = useAuthInterceptor(); //axios interceptor
-  const [ws, setWs] = useState<WebSocket | null>(null); //websocket
+
   const [activeSplitList, setActiveSplitList] = useState([]);
   const [paidSplitList, setPaidSplitList] = useState([]);
   const [splitstoPay, setSplitsToPay] = useState([]);
   const [invitedtoPay, setInvitedToPay] = useState([]);
-  const [retryCount, setRetryCount] = useState(0);
   const current_user = getToken();
   const [openToast, setOpenToast] = useState(false);
   const [toastInfo, setToastInfo] = useState("");
   const [triggerRefresh, setTriggerRefresh] = useState(0);
 
-  
-  const connectWebSocket = () => {
-    const socket = new WebSocket("ws://localhost:3000");
+  //start websocket
+  const { lastMessage, readyState } = useWebSocket(
+    "wss://localhost:3000",
+    10000
+  );
 
-    socket.onopen = () => {
-      //console.log("WebSocket connection established");
-      setRetryCount(0); //reset connection if unssuccessful
+  useEffect(() => {
 
-      // Send ping every 30 secs
-      const pingInterval = setInterval(() => {
-        if (socket.readyState === WebSocket.OPEN) {
-          socket.send(JSON.stringify({ type: "ping" }));
-        }
-      }, 30000);
+    if (lastMessage === "WebSocket connection established") {
+      setTriggerRefresh(Math.random());
+    }
 
-      (socket as any).pingInterval = pingInterval;
-    };
-
-    socket.onmessage = (event) => {
-      if (event.data === "ebSocket connection established") {
-        setTriggerRefresh(Math.random());
-      }
-
-      if (event.data !== "ok bye") {
-        const data = JSON.parse(event.data);
+    if (lastMessage !== "ok bye") {
+      if (typeof Object(lastMessage) && lastMessage !== null) {
+        const data = JSON.parse(lastMessage);
 
         if (data.to === "splitters") {
           const splitter = data.data.splitters.filter(
@@ -79,13 +69,13 @@ const Home = () => {
 
           setTriggerRefresh(Math.random());
         } else if (data.disposition === "payment_cancelled") {
-          console.log(data);
+          //console.log(data);
           const initiator = data.data.splitters.splitters.filter(
             (splitter: any) => {
               return splitter;
             }
           );
-          console.log(initiator);
+          //console.log(initiator);
 
           const split_user = data.data.splitters.splitters.filter(
             (splitter: { email: any }) => {
@@ -101,43 +91,9 @@ const Home = () => {
           console.log(split_user);
         }
       }
-    };
+    }
+  }, [lastMessage, readyState]);
 
-    socket.onclose = (event) => {
-      console.log("WebSocket connection closed:", event.code, event.reason);
-      clearInterval((socket as any).pingInterval);
-
-      if (retryCount < 5) {
-        // Limit the number of reconnection attempts
-        const timeout = Math.min(1000 * Math.pow(2, retryCount), 30000); // Exponential backoff
-        console.log(`Reconnecting in ${timeout / 1000} seconds...`);
-        setTimeout(connectWebSocket, timeout);
-        setRetryCount(retryCount + 1);
-      } else {
-        console.error("Max reconnection attempts reached. Giving up.");
-      }
-    };
-
-    socket.onerror = (error) => {
-      console.error("WebSocket error:", error);
-      socket.close(); // Close the socket and trigger the onclose event
-    };
-
-    setWs(socket);
-  };
-
-  //keep websocket alive
-  useLayoutEffect(() => {
-    connectWebSocket();
-
-    // Cleanup on component unmount
-    return () => {
-      if (ws) {
-        clearInterval((ws as any).pingInterval);
-        ws.close();
-      }
-    };
-  }, []);
 
   //get all recent splits
   useEffect(() => {
