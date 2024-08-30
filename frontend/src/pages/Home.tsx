@@ -10,15 +10,15 @@ import useWebSocket from "../hooks/useWebSocket";
 import { apiRequest } from "../utils/api/axios";
 
 const Home = () => {
+  const current_user = getToken(); //get current logged user
   const interceptor = useAuthInterceptor(); //axios interceptor
   const [activeSplitList, setActiveSplitList] = useState([]);
   const [paidSplitList, setPaidSplitList] = useState([]);
   const [splitstoPay, setSplitsToPay] = useState([]);
   const [invitedtoPay, setInvitedToPay] = useState([]);
-  const current_user = getToken();
   const [openToast, setOpenToast] = useState(false);
   const [toastInfo, setToastInfo] = useState("");
-  const [triggerRefresh, setTriggerRefresh] = useState(0);
+  const [triggerRefresh, setTriggerRefresh] = useState(0); //re-renders upon message from websocket
 
   //start websocket
   const { lastMessage, readyState } = useWebSocket("ws://localhost:3000");
@@ -108,8 +108,7 @@ const Home = () => {
 
   //Get all completed split transactions
   useEffect(() => {
-    const PAYMENTS_URL =
-      "/api/payments?status=paid&initiator=" + current_user.id;
+    const PAYMENTS_URL =`/api/payments?status=paid&initiator=${ current_user.id}`
 
     const getAllPaidSplits = async () => {
       const allPaymentsList = await apiRequest(interceptor, PAYMENTS_URL);
