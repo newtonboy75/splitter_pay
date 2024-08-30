@@ -30,7 +30,6 @@ const ActiveDetails = () => {
           data: { splitters: paymentDetails.state },
         });
         if (response.status === 200) {
-          console.log(response.data);
           setShowDialogAlert(false);
           setToastInfo(`Split has been cancelled.`);
           setOpenToast(true);

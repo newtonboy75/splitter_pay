@@ -18,14 +18,12 @@ const Checkout = () => {
 
     try {
       setProcessingPayment(true);
-      //setSuccessPopup(false);
       const response = await interceptor.put(
         PAYMENTS_URL,
         JSON.stringify(paymentDetails.state)
       );
 
       if (response.status === 200) {
-        //location.href = "/";
         setToastInfo(`Thank you. Your payment has been recieved!`);
         setOpenToast(true);
       }
