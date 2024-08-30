@@ -62,14 +62,13 @@ const SplitNewModal = ({ modalShow }: Props) => {
   const [originalAmount, setOriginalAmount] = useState("");
   const [splitError, setSplitError] = useState("");
   const [amountError, setAmmoutError] = useState("");
+  const [showNewSplitCard, setShowNewSplitCard] = useState(false);
+  const [serviceName, setServiceName] = useState("");
+  const [splitSuccess, setSplitSucess] = useState(false);
 
   let nameRef = useRef<HTMLInputElement>(null);
   let emRef = useRef<HTMLInputElement>(null);
   let servProd = useRef<HTMLInputElement>(null);
-  const [showNewSplitCard, setShowNewSplitCard] = useState(false);
-
-  const [serviceName, setServiceName] = useState("");
-  const [splitSuccess, setSplitSucess] = useState(false);
 
   //show modal form
   const handleParentFunction = () => {

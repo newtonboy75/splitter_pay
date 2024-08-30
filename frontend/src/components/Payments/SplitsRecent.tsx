@@ -1,33 +1,11 @@
 import { Link } from "react-router-dom";
 import { getToken } from "../../utils/saveAuth";
+import paymentDetails from "../../utils/paymentDetails";
 
 const SplitsRecent = ({ split }: any) => {
+
   const currentUser = getToken();
-
-  const splitters = Array.from(split.splitters);
-  const payee: any = splitters.filter((split: any) => {
-    return split.email === currentUser.email;
-  });
-
-  const initiator: any = splitters.filter((split: any) => {
-    return split.is_initiator === true;
-  });
-
-  //prepare details for submission
-  const paymentDetails = {
-    id: split._id,
-    name: split.name,
-    num_splitters: split.splitters.length,
-    initiator: initiator[0].name,
-    totalAmount: parseFloat(split.amount).toFixed(2),
-    email: payee[0].email,
-    share_amount: payee[0].share_amount,
-    payee_name: payee[0].name,
-    date_paid: payee[0].date_paid,
-    payment_id: payee[0].id,
-    initiator_id: initiator[0].id,
-    splitters: splitters
-  };
+  const details = paymentDetails(split, currentUser)
 
   return (
     <>
@@ -63,7 +41,7 @@ const SplitsRecent = ({ split }: any) => {
             <Link
               type="button"
               className="px-5 py-2.5 rounded-full text-white text-sm tracking-wider font-medium border border-current outline-none bg-blue-700 hover:bg-blue-800 active:bg-blue-700 self-center  -mb-4 mt-6"
-              to={`/paid/${paymentDetails.id}`} state={paymentDetails}
+              to={`/paid/${details.id}`} state={details}
             >
               View
             </Link>
