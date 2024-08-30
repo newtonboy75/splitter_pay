@@ -17,11 +17,12 @@ const ActiveDetails = () => {
     setShowDialogAlert(true);
   };
 
+  //delete submission
   const handleOption = async (option: boolean) => {
     console.log(paymentDetails);
-    if (option === false) {
+    if (option === false) { //close dialog alert
       setShowDialogAlert(false);
-    } else {
+    } else { //submit if yes
       const PAYMENTS_URL = `/api/payments/${paymentDetails.state._id}/delete`;
 
       try {

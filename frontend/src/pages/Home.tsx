@@ -8,19 +8,19 @@ import SplitsRecentInvites from "../components/Payments/SplitsRecentInvites";
 import Toast from "../components/Main/Toast";
 
 const Home = () => {
-  const interceptor = useAuthInterceptor();
+  const interceptor = useAuthInterceptor(); //axios interceptor
+  const [ws, setWs] = useState<WebSocket | null>(null); //websocket
   const [activeSplitList, setActiveSplitList] = useState([]);
   const [paidSplitList, setPaidSplitList] = useState([]);
   const [splitstoPay, setSplitsToPay] = useState([]);
   const [invitedtoPay, setInvitedToPay] = useState([]);
-  const [ws, setWs] = useState<WebSocket | null>(null);
   const [retryCount, setRetryCount] = useState(0);
   const current_user = getToken();
   const [openToast, setOpenToast] = useState(false);
   const [toastInfo, setToastInfo] = useState("");
   const [triggerRefresh, setTriggerRefresh] = useState(0);
 
-
+  
   const connectWebSocket = () => {
     const socket = new WebSocket("ws://localhost:3000");
 
@@ -39,8 +39,7 @@ const Home = () => {
     };
 
     socket.onmessage = (event) => {
-
-      if(event.data === "ebSocket connection established"){
+      if (event.data === "ebSocket connection established") {
         setTriggerRefresh(Math.random());
       }
 
@@ -60,50 +59,46 @@ const Home = () => {
             }
           );
 
-
           if (splitter[0]["is_initiator"] !== true) {
             setToastInfo(
               `${initiator[0]["name"]} would like to split the cost for ${data.data.name} for $${splitter[0]["share_amount"]}`
             );
             setOpenToast(true);
-
           }
           setTriggerRefresh(Math.random());
         } else if (data.to === "initiator") {
-
-
           if (current_user.id === data.data.initiator_id) {
-
             setToastInfo(
               `Payment of $${data.data.share_amount} was received from ${data.data.payee} for ${data.data.name}.`
             );
             setOpenToast(true);
-          
           } else if (data.data.email === current_user.email) {
-
             setToastInfo(`Thank you. Your payment has been recieved!`);
             setOpenToast(true);
-       
           }
 
           setTriggerRefresh(Math.random());
-        } else if(data.disposition === "payment_cancelled") {
-          console.log(data)
-          const initiator = data.data.splitters.splitters.filter((splitter: any) => {
-            return splitter
-          })
-          console.log(initiator)
+        } else if (data.disposition === "payment_cancelled") {
+          console.log(data);
+          const initiator = data.data.splitters.splitters.filter(
+            (splitter: any) => {
+              return splitter;
+            }
+          );
+          console.log(initiator);
 
-          const split_user = data.data.splitters.splitters.filter((splitter: { email: any; }) => {
-            return splitter.email === current_user.email
-          })
+          const split_user = data.data.splitters.splitters.filter(
+            (splitter: { email: any }) => {
+              return splitter.email === current_user.email;
+            }
+          );
 
-
-          setToastInfo(`${initiator[0].name} cancelled ${data.data.splitters.name} and don't want to split the bill anymore.`);
+          setToastInfo(
+            `${initiator[0].name} cancelled ${data.data.splitters.name} and don't want to split the bill anymore.`
+          );
           setOpenToast(true);
           setTriggerRefresh(Math.random());
-          console.log(split_user)
-
+          console.log(split_user);
         }
       }
     };
@@ -131,6 +126,7 @@ const Home = () => {
     setWs(socket);
   };
 
+  //keep websocket alive
   useLayoutEffect(() => {
     connectWebSocket();
 
@@ -143,6 +139,7 @@ const Home = () => {
     };
   }, []);
 
+  //get all recent splits
   useEffect(() => {
     const PAYMENTS_URL =
       "/api/payments?status=active&initiator=" + current_user.id;
@@ -167,7 +164,7 @@ const Home = () => {
     getAllPayments();
   }, [triggerRefresh]);
 
-  //Get all splits that you initiated and all splitters have paid
+  //Get all completed split transactions
   useEffect(() => {
     const PAYMENTS_URL =
       "/api/payments?status=paid&initiator=" + current_user.id;
@@ -192,6 +189,7 @@ const Home = () => {
     getAllPaidSplits();
   }, [triggerRefresh]);
 
+  //get all that needs payment
   useEffect(() => {
     const PAYMENTS_URL =
       "/api/payments?status=toPay&email=" + current_user.email;
@@ -216,6 +214,7 @@ const Home = () => {
     getAllSplitsToPay();
   }, [triggerRefresh]);
 
+  //get all splits sent to you for a split
   useEffect(() => {
     const PAYMENTS_URL =
       "/api/payments?status=invited&email=" + current_user.email;
@@ -241,7 +240,6 @@ const Home = () => {
   }, [triggerRefresh]);
 
   const handleCloseToast = () => {
-    //setShowModal(false);
     setOpenToast(false);
   };
 
@@ -273,8 +271,8 @@ const Home = () => {
               <div>
                 {paidSplitList && (
                   <h2 className="text-[#ececec] text-left font-extrabold mb-6">
-                    Completed Splits (All your initiated splits that has been paid,
-                    or no pending payment.)
+                    Completed Splits (All your initiated splits that has been
+                    paid, or no pending payment.)
                   </h2>
                 )}
 

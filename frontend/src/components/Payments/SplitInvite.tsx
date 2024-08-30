@@ -3,14 +3,18 @@ import { getToken } from "../../utils/saveAuth";
 
 const SplitInvite = ({ toPay }: any) => {
   const currentUser = getToken();
+
+  //get the initiator of the splits
   const initiator = toPay["splitters"].filter((splitter: any) => {
     return splitter.is_initiator === true;
   });
 
+  //othe current logged in user
   const payee = toPay["splitters"].filter((splitter: any) => {
     return splitter.email === currentUser.email;
   });
 
+  //prepare details to be sent to the server
   const paymentDetails = {
     id: toPay["_id"],
     name: toPay["name"],

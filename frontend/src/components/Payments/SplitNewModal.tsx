@@ -12,6 +12,7 @@ import { Props } from "../../utils/types/interface";
 import { useAuthInterceptor } from "../../hooks/useAuthInterceptor";
 import Toast from "../Main/Toast";
 
+//useReducer hook
 const splitterReducer = (
   state: any[],
   action: { type: any; value: any; share_amount: number }
@@ -35,8 +36,9 @@ const splitterReducer = (
 
 const SplitNewModal = ({ modalShow }: Props) => {
   const interceptor = useAuthInterceptor();
-
   const currentUser = getToken();
+
+  //initiate useReducer with the current signed in user details as default
   const initialSplit = [
     {
       id: currentUser.id,
@@ -48,7 +50,7 @@ const SplitNewModal = ({ modalShow }: Props) => {
     },
   ];
 
-  const [splitters1, dispatch] = useReducer(splitterReducer, initialSplit);
+  const [split_members, dispatch] = useReducer(splitterReducer, initialSplit);
   const [showSplitterSingle, setShowSplitterSingle] = useState(false);
   const [otherSplitters, setOtherSplitters] = useState({
     name: "currentUser.name",
@@ -67,7 +69,7 @@ const SplitNewModal = ({ modalShow }: Props) => {
   const [showNewSplitCard, setShowNewSplitCard] = useState(false);
 
   const [serviceName, setServiceName] = useState("");
-  const [splitSuccess, setSplitSucess] = useState(false)
+  const [splitSuccess, setSplitSucess] = useState(false);
 
   //show modal form
   const handleParentFunction = () => {
@@ -77,8 +79,8 @@ const SplitNewModal = ({ modalShow }: Props) => {
   const handleCloseToast = () => {
     modalShow();
     setSplitError("");
-    setAmmoutError("")
-  }
+    setAmmoutError("");
+  };
 
   //called for the first time
   const handleAmountChange = (event: ChangeEvent<HTMLInputElement>) => {
@@ -86,7 +88,7 @@ const SplitNewModal = ({ modalShow }: Props) => {
 
     //show the current user
     setSplitError("");
-    setAmmoutError("")
+    setAmmoutError("");
     setShowSplitterSingle(true);
 
     //get the original amount
@@ -105,7 +107,7 @@ const SplitNewModal = ({ modalShow }: Props) => {
     let email = emRef.current?.value!;
 
     setSplitError("");
-    setAmmoutError("")
+    setAmmoutError("");
 
     setOtherSplitters({
       name: uname,
@@ -120,9 +122,10 @@ const SplitNewModal = ({ modalShow }: Props) => {
   }) => {
     setServiceName(event.currentTarget.value);
     setSplitError("");
-    setAmmoutError("")
+    setAmmoutError("");
   };
 
+  //put this info in reducer
   const saveNewSplitter = () => {
     const regexEmail = /\w+([-+.']\w+)*@\w+([-.]\w+)*\.\w+([-.]\w+)*/;
     if (
@@ -130,10 +133,9 @@ const SplitNewModal = ({ modalShow }: Props) => {
       regexEmail.test(emRef.current!.value) === false
     ) {
       setSplitError("Name or email address is required.");
-    
-    setAmmoutError("")
-    } 
-    else {
+
+      setAmmoutError("");
+    } else {
       dispatch({
         type: "ADD_USER",
         value: otherSplitters,
@@ -159,10 +161,10 @@ const SplitNewModal = ({ modalShow }: Props) => {
     }
   };
 
-  //remove a user from state
+  //remove a user from the reducer state
   const handleRemoveSplitter = (item: string) => {
     setSplitError("");
-    setAmmoutError("")
+    setAmmoutError("");
     dispatch({
       type: "REMOVE_USER",
       value: item,
@@ -177,6 +179,7 @@ const SplitNewModal = ({ modalShow }: Props) => {
     });
   };
 
+  //submi to the server
   const handleSubmitNewSplit = async () => {
     if (
       parseInt(originalAmount) <= 0 ||
@@ -184,18 +187,16 @@ const SplitNewModal = ({ modalShow }: Props) => {
       servProd.current?.value === ""
     ) {
       setAmmoutError("Product/service and Amount are required.");
-    } else if(splitters1.length <= 1){
+    } else if (split_members.length <= 1) {
       setAmmoutError("Please add at least one splitter.");
-    }else {
-
-
+    } else {
       const PAYMENTS_URL = "/api/payments";
       const formedSplit = {
         name: serviceName,
         amount: originalAmount,
         initiatorId: currentUser.id,
         date: new Date(),
-        splitters: splitters1,
+        splitters: split_members,
       };
 
       try {
@@ -204,7 +205,7 @@ const SplitNewModal = ({ modalShow }: Props) => {
           JSON.stringify(formedSplit)
         );
         if (response.status === 200) {
-          setSplitSucess(true)
+          setSplitSucess(true);
         }
       } catch (err: any) {
         if (err.response?.status === 401) {
@@ -218,7 +219,7 @@ const SplitNewModal = ({ modalShow }: Props) => {
 
   useEffect(() => {
     setSplitError("");
-    setAmmoutError("")
+    setAmmoutError("");
   }, [showNewSplitCard]);
 
   return (
@@ -270,7 +271,7 @@ const SplitNewModal = ({ modalShow }: Props) => {
           {showSplitterSingle && (
             <>
               <span>Splitters</span>
-              {splitters1.map((splitter, key) => {
+              {split_members.map((splitter, key) => {
                 return (
                   <div key={key}>
                     <SplitterSingleSection
@@ -280,54 +281,56 @@ const SplitNewModal = ({ modalShow }: Props) => {
                   </div>
                 );
               })}
-              {
-                !showNewSplitCard && <div className="flex justify-center mt-3 hover:cursor-pointer" title="Add Splitter">
-                <svg
-                  width="46px"
-                  height="46px"
-                  viewBox="0 0 20 20"
-                  version="1.1"
-                  xmlns="http://www.w3.org/2000/svg"
-                  fill="#000000"
-                  onClick={() => setShowNewSplitCard(true)}
+              {!showNewSplitCard && (
+                <div
+                  className="flex justify-center mt-3 hover:cursor-pointer"
+                  title="Add Splitter"
                 >
-                  <g id="SVGRepo_bgCarrier" stroke-width="0"></g>
-                  <g
-                    id="SVGRepo_tracerCarrier"
-                    stroke-linecap="round"
-                    stroke-linejoin="round"
-                  ></g>
-                  <g id="SVGRepo_iconCarrier">
-                    {" "}
-                    <title>icon/20/circle-add</title>{" "}
-                    <desc>Created with Sketch.</desc> <defs> </defs>{" "}
+                  <svg
+                    width="46px"
+                    height="46px"
+                    viewBox="0 0 20 20"
+                    version="1.1"
+                    xmlns="http://www.w3.org/2000/svg"
+                    fill="#000000"
+                    onClick={() => setShowNewSplitCard(true)}
+                  >
+                    <g id="SVGRepo_bgCarrier" stroke-width="0"></g>
                     <g
-                      id="Output-temp"
-                      stroke="none"
-                      stroke-width="1"
-                      fill="none"
-                      fill-rule="evenodd"
-                    >
+                      id="SVGRepo_tracerCarrier"
+                      stroke-linecap="round"
+                      stroke-linejoin="round"
+                    ></g>
+                    <g id="SVGRepo_iconCarrier">
                       {" "}
+                      <title>icon/20/circle-add</title>{" "}
+                      <desc>Created with Sketch.</desc> <defs> </defs>{" "}
                       <g
-                        id="_archive"
-                        transform="translate(-1146.000000, -212.000000)"
-                        fill="#e3e3e3"
+                        id="Output-temp"
+                        stroke="none"
+                        stroke-width="1"
+                        fill="none"
+                        fill-rule="evenodd"
                       >
                         {" "}
-                        <path
-                          d="M1156.75,220.805556 L1156.75,218.858224 C1156.75,218.329341 1156.31472,217.888889 1155.77778,217.888889 C1155.23709,217.888889 1154.80556,218.322875 1154.80556,218.858224 L1154.80556,220.805556 L1152.85822,220.805556 C1152.32934,220.805556 1151.88889,221.240834 1151.88889,221.777778 C1151.88889,222.318465 1152.32287,222.75 1152.85822,222.75 L1154.80556,222.75 L1154.80556,224.697332 C1154.80556,225.226215 1155.24083,225.666667 1155.77778,225.666667 C1156.31846,225.666667 1156.75,225.232681 1156.75,224.697332 L1156.75,222.75 L1158.69733,222.75 C1159.22621,222.75 1159.66667,222.314721 1159.66667,221.777778 C1159.66667,221.237091 1159.23268,220.805556 1158.69733,220.805556 L1156.75,220.805556 Z M1155.77738,214 C1151.48216,214 1148,217.482778 1148,221.777778 C1148,226.073578 1151.48216,229.555556 1155.77738,229.555556 C1160.0734,229.555556 1163.55556,226.073578 1163.55556,221.777778 C1163.55556,217.482778 1160.0734,214 1155.77738,214 Z"
-                          id="icon/circle-add"
+                        <g
+                          id="_archive"
+                          transform="translate(-1146.000000, -212.000000)"
+                          fill="#e3e3e3"
                         >
                           {" "}
-                        </path>{" "}
+                          <path
+                            d="M1156.75,220.805556 L1156.75,218.858224 C1156.75,218.329341 1156.31472,217.888889 1155.77778,217.888889 C1155.23709,217.888889 1154.80556,218.322875 1154.80556,218.858224 L1154.80556,220.805556 L1152.85822,220.805556 C1152.32934,220.805556 1151.88889,221.240834 1151.88889,221.777778 C1151.88889,222.318465 1152.32287,222.75 1152.85822,222.75 L1154.80556,222.75 L1154.80556,224.697332 C1154.80556,225.226215 1155.24083,225.666667 1155.77778,225.666667 C1156.31846,225.666667 1156.75,225.232681 1156.75,224.697332 L1156.75,222.75 L1158.69733,222.75 C1159.22621,222.75 1159.66667,222.314721 1159.66667,221.777778 C1159.66667,221.237091 1159.23268,220.805556 1158.69733,220.805556 L1156.75,220.805556 Z M1155.77738,214 C1151.48216,214 1148,217.482778 1148,221.777778 C1148,226.073578 1151.48216,229.555556 1155.77738,229.555556 C1160.0734,229.555556 1163.55556,226.073578 1163.55556,221.777778 C1163.55556,217.482778 1160.0734,214 1155.77738,214 Z"
+                            id="icon/circle-add"
+                          >
+                            {" "}
+                          </path>{" "}
+                        </g>{" "}
                       </g>{" "}
-                    </g>{" "}
-                  </g>
-                </svg>
-              </div>
-              }
-              
+                    </g>
+                  </svg>
+                </div>
+              )}
             </>
           )}
         </div>
@@ -405,9 +408,10 @@ const SplitNewModal = ({ modalShow }: Props) => {
       {/* {splitSuccess && <DialogSuccess dialogName={"Split sent!"} desc={"Split sent successfuly."} />} */}
       {/* {openToast && <Toast info={toastInfo} closeToast={handleCloseToast} />} */}
 
-      {splitSuccess && <Toast info={"Split sent successfuly."} closeToast={handleCloseToast} />}
+      {splitSuccess && (
+        <Toast info={"Split sent successfuly."} closeToast={handleCloseToast} />
+      )}
     </div>
-    
   );
 };
 

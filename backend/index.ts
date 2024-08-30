@@ -10,13 +10,15 @@ import { UserInfo } from "./utils/types/users";
 import expressWs from 'express-ws';
 
 dotenv.config();
+
+//export so other methods can use websocket
 export const { app, getWss, applyTo } = expressWs(express());
 
 const server = http.createServer(app);
 
 app.use(
   cors({
-    origin: ["http://localhost:5173", "http://localhost:4173"],
+    origin: ["http://localhost:5173", "http://localhost:4173"], //localhost address for dev and built
     credentials: true,
   })
 );
@@ -37,8 +39,6 @@ declare global {
   }
 }
 
-
-
 const PORT = process.env.PORT;
 app.listen(PORT, () => {
   console.log(`Serving on port ${PORT}`);
@@ -55,9 +55,6 @@ app.ws('/', function(ws, req) {
   });
   //console.log('socket', req);
 });
-
-
-
 
 //Serve API endpoints
 app.use("/api", router());

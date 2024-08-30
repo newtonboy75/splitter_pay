@@ -13,6 +13,7 @@ const SplitsRecent = ({ split }: any) => {
     return split.is_initiator === true;
   });
 
+  //prepare details for submission
   const paymentDetails = {
     id: split._id,
     name: split.name,

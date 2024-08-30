@@ -3,8 +3,7 @@ import { formatDate } from "../utils/formatDate";
 
 const Recents = () => {
   const paymentDetails = useLocation();
-  const date = new Date(paymentDetails.state.date_paid);
-  const formattedDateTime = date.toISOString().replace("T", " ").split(".")[0];
+  const formattedDateTime = formatDate(paymentDetails.state.date_paid);
 
   return (
     <div className="font-[sans-serif] bg-gradient-to-tr from-gray-200 via-gray-100 to-gray-50 h-screen pt-28 lg:pt-36 lg:px-52 lg:pr-52">

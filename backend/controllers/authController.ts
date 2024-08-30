@@ -6,6 +6,7 @@ import bcrypt from "bcryptjs";
 import dotenv from "dotenv";
 
 dotenv.config();
+
 // Login user
 const authenticateUser = async (req: Request, res: Response) => {
   const { email, password } = req.body;
@@ -31,6 +32,7 @@ const authenticateUser = async (req: Request, res: Response) => {
   }
 };
 
+//refresh the token
 const refeshToken = async (req: Request, res: Response) => {
   const { token, user } = req.body;
   const jwt_secret: string = process.env.JWT_SECRET || "";

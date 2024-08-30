@@ -2,6 +2,7 @@ import { Request, Response } from "express";
 import Payment from "../database/PaymentSchema";
 import { app, getWss } from "..";
 
+//get all splits
 export const getPayments = async (req: Request, res: Response) => {
   const { status, initiator, email } = req.query;
 
@@ -29,8 +30,8 @@ export const getPayments = async (req: Request, res: Response) => {
         },
       });
     } else if (status === "toPay") {
-      //Ones you have to pay
 
+      //Ones you have to pay
       payments = await Payment.find({
         splitters: {
           $all: {
@@ -42,6 +43,7 @@ export const getPayments = async (req: Request, res: Response) => {
         },
       });
     } else if (status === "invited") {
+      
       //Ones you have to pay after invitation to split
       payments = await Payment.find({
         splitters: {
@@ -68,6 +70,7 @@ export const getPaymentById = async (req: Request, res: Response) => {
   console.log("get all payments here");
 };
 
+//save new split to mongodb
 export const savePayment = async (req: Request, res: Response) => {
   const transaction = req.body;
   const payment_save = await Payment.create(transaction);
@@ -91,6 +94,7 @@ export const savePayment = async (req: Request, res: Response) => {
   res.status(200).json(transaction);
 };
 
+//payment transaction
 export const paySplit = async (req: Request, res: Response) => {
   console.log("get all payments here", req.body);
   const {
@@ -144,6 +148,7 @@ export const paySplit = async (req: Request, res: Response) => {
   res.status(200).json("Payment successful");
 };
 
+//initiator cancelled the transaction
 export const removeSplit = async (req: Request, res: Response) => {
   // console.log(req.params.paymentId);
   // console.log(req.body);
@@ -152,7 +157,7 @@ export const removeSplit = async (req: Request, res: Response) => {
   try {
     const deletedDocument = await Payment.findByIdAndDelete(paymentId);
     if (deletedDocument) {
-      res.status(200).json("Split has been deleted");
+      res.status(200).json("Split has been cancelled");
 
       const message = {
         data: data,

@@ -12,6 +12,7 @@ const Checkout = () => {
   const [openToast, setOpenToast] = useState(false);
   const [toastInfo, setToastInfo] = useState("");
 
+  //submit checkout 
   const handlePayment = async () => {
     const PAYMENTS_URL = `/api/payments/${paymentDetails.state.id}/pay`;
 
