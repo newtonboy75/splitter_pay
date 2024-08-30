@@ -1,4 +1,4 @@
-import { useState, useEffect } from "react";
+import { useState, useEffect, Suspense } from "react";
 import SplitInvite from "../components/Payments/SplitInvite";
 import SplitsActive from "../components/Payments/SplitsActive";
 import SplitsRecent from "../components/Payments/SplitsRecent";
@@ -27,7 +27,6 @@ const Home = () => {
   );
 
   useEffect(() => {
-
     if (lastMessage === "WebSocket connection established") {
       setTriggerRefresh(Math.random());
     }
@@ -94,7 +93,6 @@ const Home = () => {
     }
   }, [lastMessage, readyState]);
 
-
   //get all recent splits
   useEffect(() => {
     const PAYMENTS_URL =
@@ -106,6 +104,7 @@ const Home = () => {
 
         if (response.status === 200) {
           const list = response.data.reverse();
+          //console.log(list)
           setActiveSplitList(list);
         }
       } catch (err: any) {
@@ -201,7 +200,7 @@ const Home = () => {
 
   return (
     <>
-      <div className="text-right pt-32 pl-6 pr-6 text-gray-200 font-medium">
+      <div className="text-right pt-32 pl-6 pr-6 text-gray-200 font-medium]">
         Hello {current_user.name}
       </div>
       <div className="pb-10">
@@ -209,42 +208,63 @@ const Home = () => {
           <div className="max-w-7xl mx-auto px-4 sm:px-4 lg:px-36">
             <div className="grid grid-cols-1 gap-y-10 md:grid-cols-2 gap-x-12">
               <div>
-                <h2 className="text-[#ececec] text-left font-extrabold mb-6">
-                  Recent Splits
-                </h2>
-                {splitstoPay.map((split) => {
-                  return <SplitInvite toPay={split} />;
-                })}
-                {activeSplitList && (
-                  <h2 className="text-[#ececec] text-left font-extrabold mb-6 mt-16">
-                    Active Splits
-                  </h2>
+                {(paidSplitList.length <= 0 &&
+                splitstoPay.length <= 0 &&
+                activeSplitList.length <= 0 &&
+                invitedtoPay.length <= 0) ? (
+                  <div className="text-black text-center ">
+                    <div className="text-white pt-52">
+                      No split transaction yet. Please create new.
+                    </div>
+                  </div>
+                ) : (
+                  ""
                 )}
-                {activeSplitList.map((split) => {
-                  return <SplitsActive split={split} />;
-                })}
+
+                <Suspense>
+                  {splitstoPay.map((split) => {
+                    <h2 className="text-[#ececec] text-left font-extrabold mb-6">
+                      Recent Splits
+                    </h2>;
+                    return <SplitInvite toPay={split} />;
+                  })}
+                </Suspense>
+
+                <Suspense>
+                  {activeSplitList.length >= 1 && (
+                    <h2 className="text-[#ececec] text-left font-extrabold mb-6 mt-16">
+                      Active Splits
+                    </h2>
+                  )}
+                  {activeSplitList.map((split) => {
+                    return <SplitsActive split={split} />;
+                  })}
+                </Suspense>
               </div>
               <div>
-                {paidSplitList && (
+                {paidSplitList.length >= 1 && (
                   <h2 className="text-[#ececec] text-left font-extrabold mb-6">
                     Completed Splits (All your initiated splits that has been
                     paid, or no pending payment.)
                   </h2>
                 )}
+                <Suspense>
+                  {paidSplitList.map((split) => {
+                    return <SplitsRecent split={split} />;
+                  })}
+                </Suspense>
 
-                {paidSplitList.map((split) => {
-                  return <SplitsRecent split={split} />;
-                })}
-
-                {invitedtoPay && (
+                {invitedtoPay.length >= 1 && (
                   <h2 className="text-[#ececec] text-left font-extrabold mb-6 mt-16">
                     Paid Splits (All your paid splits.)
                   </h2>
                 )}
 
-                {invitedtoPay.map((split) => {
-                  return <SplitsRecentInvites split={split} />;
-                })}
+                <Suspense>
+                  {invitedtoPay.map((split) => {
+                    return <SplitsRecentInvites split={split} />;
+                  })}
+                </Suspense>
               </div>
             </div>
           </div>
