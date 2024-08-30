@@ -40,7 +40,7 @@ const SplitsRecent = ({ split }: any) => {
           <div className="float-right mb-6 mt-4">
             <Link
               type="button"
-              className="px-5 py-2.5 rounded-full text-white text-sm tracking-wider font-medium border border-current outline-none bg-blue-700 hover:bg-blue-800 active:bg-blue-700 self-center  -mb-4 mt-6"
+              className="px-5 py-2.5 rounded-full text-white text-sm tracking-wider font-medium border border-current outline-none bg-orange-700 hover:bg-orange-800 active:bg-orange-700 self-center  -mb-4 mt-6"
               to={`/paid/${details.id}`} state={details}
             >
               View
