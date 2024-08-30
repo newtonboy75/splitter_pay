@@ -3,6 +3,7 @@ import { WebSocketHook } from "../utils/types/interface";
 
 const useWebSocket = (
   url: string,
+  pingInterval: number = 30000
 ): WebSocketHook => {
   const [lastMessage, setLastMessage] = useState<string | any | null>(null);
   const [readyState] = useState<number>(WebSocket.CONNECTING);
@@ -49,7 +50,7 @@ const useWebSocket = (
       console.error("WebSocket error:", error);
       socket.close(); // Close the socket and trigger the onclose event
     };
-  }, [url]);
+  }, [url, pingInterval]);
 
   const sendMessage = (message: string) => {
     if (

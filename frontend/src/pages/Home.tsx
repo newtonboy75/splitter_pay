@@ -22,14 +22,14 @@ const Home = () => {
 
   //start websocket
   const { lastMessage, readyState } = useWebSocket(
-    "wss://localhost:3000"
+    "ws://localhost:3000"
   );
 
   useEffect(() => {
     if (lastMessage === "WebSocket connection established") {
       setTriggerRefresh(Math.random());
     }
-
+console.log(lastMessage)
     if (lastMessage !== "ok bye") {
       if (typeof Object(lastMessage) && lastMessage !== null) {
         const data = JSON.parse(lastMessage);
