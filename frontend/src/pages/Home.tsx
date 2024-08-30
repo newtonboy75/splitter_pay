@@ -22,8 +22,7 @@ const Home = () => {
 
   //start websocket
   const { lastMessage, readyState } = useWebSocket(
-    "wss://localhost:3000",
-    10000
+    "wss://localhost:3000"
   );
 
   useEffect(() => {
