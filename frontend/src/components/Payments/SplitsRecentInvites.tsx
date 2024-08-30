@@ -1,10 +1,11 @@
 import { Link } from "react-router-dom";
 import { getToken } from "../../utils/saveAuth";
 import paymentDetails from "../../utils/paymentDetails";
+import { formatDate } from "../../utils/formatDate";
 
 const SplitsRecentInvites = ({ split }: any) => {
   const currentUser = getToken();
-  const details = paymentDetails(split, currentUser)
+  const details = paymentDetails(split, currentUser);
 
   return (
     <>
@@ -20,7 +21,7 @@ const SplitsRecentInvites = ({ split }: any) => {
           <div className="mt-2 text-sm text-gray-500 leading-relaxed">
             <p>No of Splitters: {split.splitters.length}</p>
             <p>Initiated by {details.initiator.name}</p>
-            <p>Paid on {details.date_paid}</p>
+            <p>Paid on {formatDate(details.date_paid)}</p>
           </div>
 
           <div className="float-right mb-6 mt-4">

@@ -7,10 +7,10 @@ import { getToken } from "../utils/saveAuth";
 import SplitsRecentInvites from "../components/Payments/SplitsRecentInvites";
 import Toast from "../components/Main/Toast";
 import useWebSocket from "../hooks/useWebSocket";
+import { apiRequest } from "../utils/api/axios";
 
 const Home = () => {
   const interceptor = useAuthInterceptor(); //axios interceptor
-
   const [activeSplitList, setActiveSplitList] = useState([]);
   const [paidSplitList, setPaidSplitList] = useState([]);
   const [splitstoPay, setSplitsToPay] = useState([]);
@@ -21,15 +21,13 @@ const Home = () => {
   const [triggerRefresh, setTriggerRefresh] = useState(0);
 
   //start websocket
-  const { lastMessage, readyState } = useWebSocket(
-    "ws://localhost:3000"
-  );
+  const { lastMessage, readyState } = useWebSocket("ws://localhost:3000");
 
   useEffect(() => {
     if (lastMessage === "WebSocket connection established") {
       setTriggerRefresh(Math.random());
     }
-console.log(lastMessage)
+
     if (lastMessage !== "ok bye") {
       if (typeof Object(lastMessage) && lastMessage !== null) {
         const data = JSON.parse(lastMessage);
@@ -94,24 +92,14 @@ console.log(lastMessage)
 
   //get all recent splits
   useEffect(() => {
-    const PAYMENTS_URL =
-      "/api/payments?status=active&initiator=" + current_user.id;
-
     const getAllPayments = async () => {
-      try {
-        const response = await interceptor.get(PAYMENTS_URL);
+      const PAYMENTS_URL = `/api/payments?status=active&initiator=${current_user.id}`;
+      const allPaymentsList = await apiRequest(interceptor, PAYMENTS_URL);
 
-        if (response.status === 200) {
-          const list = response.data.reverse();
-          //console.log(list)
-          setActiveSplitList(list);
-        }
-      } catch (err: any) {
-        if (err.response?.status === 401) {
-          console.log("Unauthorized");
-        } else {
-          console.log(err);
-        }
+      if (allPaymentsList?.status === 200) {
+        const list = allPaymentsList.data.reverse();
+        console.log(list);
+        setActiveSplitList(list);
       }
     };
 
@@ -124,19 +112,11 @@ console.log(lastMessage)
       "/api/payments?status=paid&initiator=" + current_user.id;
 
     const getAllPaidSplits = async () => {
-      try {
-        const response = await interceptor.get(PAYMENTS_URL);
+      const allPaymentsList = await apiRequest(interceptor, PAYMENTS_URL);
 
-        if (response.status === 200) {
-          const list = response.data.reverse();
-          setPaidSplitList(list);
-        }
-      } catch (err: any) {
-        if (err.response?.status === 401) {
-          console.log("Unauthorized");
-        } else {
-          console.log(err);
-        }
+      if (allPaymentsList?.status === 200) {
+        const list = allPaymentsList.data.reverse();
+        setPaidSplitList(list);
       }
     };
 
@@ -145,23 +125,14 @@ console.log(lastMessage)
 
   //get all that needs payment
   useEffect(() => {
-    const PAYMENTS_URL =
-      "/api/payments?status=toPay&email=" + current_user.email;
+    const PAYMENTS_URL = `/api/payments?status=toPay&email=${current_user.email}`;
 
     const getAllSplitsToPay = async () => {
-      try {
-        const response = await interceptor.get(PAYMENTS_URL);
+      const allPaymentsList = await apiRequest(interceptor, PAYMENTS_URL);
 
-        if (response.status === 200) {
-          const splitsToPay = response.data.reverse();
-          setSplitsToPay(splitsToPay);
-        }
-      } catch (err: any) {
-        if (err.response?.status === 401) {
-          console.log("Unauthorized");
-        } else {
-          console.log(err);
-        }
+      if (allPaymentsList?.status === 200) {
+        const list = allPaymentsList.data.reverse();
+        setSplitsToPay(list);
       }
     };
 
@@ -170,23 +141,14 @@ console.log(lastMessage)
 
   //get all splits sent to you for a split
   useEffect(() => {
-    const PAYMENTS_URL =
-      "/api/payments?status=invited&email=" + current_user.email;
+    const PAYMENTS_URL = `/api/payments?status=invited&email=${current_user.email}`;
 
     const getAllSplitsInvitedToPay = async () => {
-      try {
-        const response = await interceptor.get(PAYMENTS_URL);
+      const allPaymentsList = await apiRequest(interceptor, PAYMENTS_URL);
 
-        if (response.status === 200) {
-          const splitsToPay = response.data.reverse();
-          setInvitedToPay(splitsToPay);
-        }
-      } catch (err: any) {
-        if (err.response?.status === 401) {
-          console.log("Unauthorized");
-        } else {
-          console.log(err);
-        }
+      if (allPaymentsList?.status === 200) {
+        const list = allPaymentsList.data.reverse();
+        setInvitedToPay(list);
       }
     };
 
@@ -207,10 +169,10 @@ console.log(lastMessage)
           <div className="max-w-7xl mx-auto px-4 sm:px-4 lg:px-36">
             <div className="grid grid-cols-1 gap-y-10 md:grid-cols-2 gap-x-12">
               <div>
-                {(paidSplitList.length <= 0 &&
+                {paidSplitList.length <= 0 &&
                 splitstoPay.length <= 0 &&
                 activeSplitList.length <= 0 &&
-                invitedtoPay.length <= 0) ? (
+                invitedtoPay.length <= 0 ? (
                   <div className="text-black text-center ">
                     <div className="text-white pt-52">
                       No split transaction yet. Please create new.
