@@ -98,7 +98,7 @@ const Home = () => {
 
       if (allPaymentsList?.status === 200) {
         const list = allPaymentsList.data.reverse();
-        console.log(list);
+        //console.log(list);
         setActiveSplitList(list);
       }
     };
