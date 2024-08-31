@@ -3,6 +3,7 @@ import { useAuthInterceptor } from "../hooks/useAuthInterceptor";
 import { useState } from "react";
 import DialogSuccess from "../components/Payments/DialogSuccess";
 import Toast from "../components/Main/Toast";
+import { apiRequest } from "../utils/api/axios";
 
 const Checkout = () => {
   const paymentDetails = useLocation();
@@ -14,25 +15,14 @@ const Checkout = () => {
 
   //submit checkout 
   const handlePayment = async () => {
+
     const PAYMENTS_URL = `/api/payments/${paymentDetails.state.id}/pay`;
+    const request = await apiRequest(interceptor, PAYMENTS_URL, 'put', paymentDetails.state)
 
-    try {
-      setProcessingPayment(true);
-      const response = await interceptor.put(
-        PAYMENTS_URL,
-        JSON.stringify(paymentDetails.state)
-      );
-
-      if (response.status === 200) {
-        setToastInfo(`Thank you. Your payment has been recieved!`);
-        setOpenToast(true);
-      }
-    } catch (err: any) {
-      if (err.response?.status === 401) {
-        console.log("Unauthorized");
-      } else {
-        console.log(err);
-      }
+    setProcessingPayment(true);
+    if(request.status === 200){
+      setToastInfo(`Thank you. Your payment has been recieved!`);
+      setOpenToast(true);
     }
   };
 

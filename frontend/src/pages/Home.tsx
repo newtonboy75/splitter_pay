@@ -112,7 +112,7 @@ const Home = () => {
     ];
 
     endPoints.map(async (endPoint) => {
-      const request = await apiRequest(interceptor, endPoint.url);
+      const request = await apiRequest(interceptor, endPoint.url, 'get');
 
       if (request?.status === 200) {
         const list = request.data.reverse();
@@ -136,7 +136,7 @@ const Home = () => {
 
   return (
     <>
-      <div className="text-right pt-32 pl-6 pr-6 text-gray-200 font-medium]">
+      <div className="text-right pt-32 pb-[28px] pl-6 pr-6 text-gray-200 font-medium]">
         Hello {current_user.name}
       </div>
       <div className="pb-10">

@@ -12,15 +12,30 @@ export const axiosPrivate = axios.create({
 });
 
 //Start api request to server
-export const apiRequest = async (interceptor: AxiosInstance, url: string) => {
-  try {
-    const response = await interceptor.get(url);
-    return response;
-  } catch (err: any) {
-    if (err.response?.status === 401) {
-      console.log("Unauthorized");
-    } else {
-      console.log(err);
-    }
+export const apiRequest = async (interceptor: AxiosInstance, url: string, method: string, data: any = null) => {
+
+  let response;
+  let transportData;
+
+  switch (method) {
+    case "post":
+      data && JSON.stringify(data);
+      transportData = data && JSON.stringify(data);
+      response = await interceptor.post(url, transportData);
+      break;
+    case "put":
+      transportData = data && JSON.stringify(data);
+      response = await interceptor.put(url, transportData);
+      break;
+    case "delete":
+      transportData = data;
+      response = await interceptor.delete(url, transportData);
+      break;
+    default:
+      response = await interceptor.get(url);
+      break;
   }
+
+  return response
+
 };

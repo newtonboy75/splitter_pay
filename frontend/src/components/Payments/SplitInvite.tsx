@@ -3,9 +3,8 @@ import { getToken } from "../../utils/saveAuth";
 import paymentDetails from "../../utils/paymentDetails";
 
 const SplitInvite = ({ toPay }: any) => {
-  
   const currentUser = getToken();
-  const details = paymentDetails(toPay, currentUser)
+  const details = paymentDetails(toPay, currentUser);
 
   return (
     <>
@@ -13,8 +12,8 @@ const SplitInvite = ({ toPay }: any) => {
         <div className="p-6">
           <p className="mt-2 mb-2 text-lg text-gray-500 leading-relaxed">
             {details.initiator} and {details.splitters.length - 1} other
-            splitter/s would like to split the cost for {details.name},
-            totaling $
+            splitter/s would like to split the cost for {details.name}, totaling
+            $
             {parseFloat(details.totalAmount).toLocaleString(undefined, {
               maximumFractionDigits: 2,
             })}

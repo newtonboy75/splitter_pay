@@ -11,6 +11,7 @@ import { getToken } from "../../utils/saveAuth";
 import { Props } from "../../utils/types/interface";
 import { useAuthInterceptor } from "../../hooks/useAuthInterceptor";
 import Toast from "../Main/Toast";
+import { apiRequest } from "../../utils/api/axios";
 
 //useReducer hook
 const splitterReducer = (
@@ -65,6 +66,7 @@ const SplitNewModal = ({ modalShow }: Props) => {
   const [showNewSplitCard, setShowNewSplitCard] = useState(false);
   const [serviceName, setServiceName] = useState("");
   const [splitSuccess, setSplitSucess] = useState(false);
+  const [sending, setSending] = useState(false)
 
   let nameRef = useRef<HTMLInputElement>(null);
   let emRef = useRef<HTMLInputElement>(null);
@@ -198,20 +200,12 @@ const SplitNewModal = ({ modalShow }: Props) => {
         splitters: split_members,
       };
 
-      try {
-        const response = await interceptor.post(
-          PAYMENTS_URL,
-          JSON.stringify(formedSplit)
-        );
-        if (response.status === 200) {
-          setSplitSucess(true);
-        }
-      } catch (err: any) {
-        if (err.response?.status === 401) {
-          console.log("Unauthorized");
-        } else {
-          console.log(err);
-        }
+      const request = await apiRequest(interceptor, PAYMENTS_URL, 'post', formedSplit)
+
+      setSending(true)
+
+      if(request.status == 200){
+        setSplitSucess(true);
       }
     }
   };
@@ -399,6 +393,7 @@ const SplitNewModal = ({ modalShow }: Props) => {
             onClick={handleSubmitNewSplit}
             type="button"
             className="px-4 py-2 rounded-lg text-white text-sm border-none outline-none tracking-wide bg-blue-600 hover:bg-blue-700 active:bg-blue-600"
+            disabled={sending}
           >
             Send Split
           </button>

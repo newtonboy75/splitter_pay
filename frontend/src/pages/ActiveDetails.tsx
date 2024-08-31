@@ -4,11 +4,12 @@ import { useState } from "react";
 import { useAuthInterceptor } from "../hooks/useAuthInterceptor";
 import Toast from "../components/Main/Toast";
 import { formatDate } from "../utils/formatDate";
+import { apiRequest } from "../utils/api/axios";
 
 const ActiveDetails = () => {
   const paymentDetails = useLocation();
   const splitters = Array.from(paymentDetails.state.splitters);
-  const [showDialogAert, setShowDialogAlert] = useState(false);
+  const [showDialogAlert, setShowDialogAlert] = useState(false);
   const interceptor = useAuthInterceptor();
   const [openToast, setOpenToast] = useState(false);
   const [toastInfo, setToastInfo] = useState("");
@@ -19,27 +20,17 @@ const ActiveDetails = () => {
 
   //delete submission
   const handleOption = async (option: boolean) => {
-    console.log(paymentDetails);
+    
     if (option === false) { //close dialog alert
       setShowDialogAlert(false);
     } else { //submit if yes
       const PAYMENTS_URL = `/api/payments/${paymentDetails.state._id}/delete`;
+      const request = await apiRequest(interceptor, PAYMENTS_URL, 'delete', { data: { splitters: paymentDetails.state } })
 
-      try {
-        const response = await interceptor.delete(PAYMENTS_URL, {
-          data: { splitters: paymentDetails.state },
-        });
-        if (response.status === 200) {
+      if(request.status === 200){
           setShowDialogAlert(false);
           setToastInfo(`Split has been cancelled.`);
           setOpenToast(true);
-        }
-      } catch (err: any) {
-        if (err.response?.status === 401) {
-          console.log("Unauthorized");
-        } else {
-          console.log(err);
-        }
       }
     }
   };
@@ -129,7 +120,7 @@ const ActiveDetails = () => {
           </div>
         </div>
       </div>
-      {showDialogAert && <DialogAlert handleOption={handleOption} />}
+      {showDialogAlert && <DialogAlert handleOption={handleOption} />}
       {openToast && <Toast info={toastInfo} closeToast={handleCloseToast} />}
     </>
   );
