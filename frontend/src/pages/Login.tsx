@@ -57,11 +57,11 @@ const Login = () => {
 
   return (
     <>
-      <div className="flex h-screen justify-center items-center">
+      <div className="flex h-screen justify-center items-center p-4">
         <div className="md:container">
-          <div className="font-semibold text-white text-5xl mb-6">
-          <img src={logo} className="md:w-1/2 lg:w-1/4 m-auto"  /> {" "}
-          Splitter Pay
+          <div className="font-semibold text-white text-5xl mb-6 w-1/2 mx-auto">
+          <img src={logo} className="sm:w-1/2 lg:w-1/2 mx-auto"  /> {" "}
+          <p className="text-2xl font-bold">Splitter Pay</p>
           </div>{" "}
           <form
             className="md:w-1/2 lg:w-1/4 m-auto bg-white p-10 rounded-md mt-20"

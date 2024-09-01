@@ -72,6 +72,7 @@ const Home = () => {
             }
           );
     
+
           setToastInfo(
             `${initiator[0].name} cancelled ${data.data.splitters.name} and don't want to split the bill anymore.`
           );
