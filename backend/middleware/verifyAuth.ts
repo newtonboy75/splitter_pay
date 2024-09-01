@@ -14,11 +14,16 @@ export const verifyAuth = (req: Request, res: Response, next: NextFunction) => {
   }
 
   const token = header.split(" ")[1];
-  const decoded = jwt.verify(token, JWT_SECRET) as JwtPayload;
+  jwt.verify(token, JWT_SECRET, (err, user) => {
+    if (err) {
+      if (err.name === "TokenExpiredError") {
+        return res
+          .status(401)
+          .json({ error: "TokenExpiredError: token expired" });
+      }
+      return res.sendStatus(403); 
+    }
 
-  if (!decoded || !decoded.userId) {
-    throw new AuthenticationError("UserId not found");
-  }
-
-  next();
+    next();
+  });
 };

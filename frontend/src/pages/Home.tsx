@@ -3,11 +3,11 @@ import SplitInvite from "../components/Payments/SplitInvite";
 import SplitsActive from "../components/Payments/SplitsActive";
 import SplitsRecent from "../components/Payments/SplitsRecent";
 import { useAuthInterceptor } from "../hooks/useAuthInterceptor";
-import { getToken } from "../utils/saveAuth";
 import SplitsRecentInvites from "../components/Payments/SplitsRecentInvites";
+import { apiRequest } from "../utils/api/axios";
+import { getToken } from "../utils/saveAuth";
 import Toast from "../components/Main/Toast";
 import useWebSocket from "../hooks/useWebSocket";
-import { apiRequest } from "../utils/api/axios";
 
 const Home = () => {
   const current_user = getToken(); //get current logged user
@@ -71,20 +71,13 @@ const Home = () => {
               return splitter;
             }
           );
-          //console.log(initiator);
-
-          const split_user = data.data.splitters.splitters.filter(
-            (splitter: { email: any }) => {
-              return splitter.email === current_user.email;
-            }
-          );
-
+    
           setToastInfo(
             `${initiator[0].name} cancelled ${data.data.splitters.name} and don't want to split the bill anymore.`
           );
           setOpenToast(true);
           setTriggerRefresh(Math.random());
-          console.log(split_user);
+
         }
       }
     }

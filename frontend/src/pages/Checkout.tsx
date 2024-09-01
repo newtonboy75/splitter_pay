@@ -20,7 +20,7 @@ const Checkout = () => {
     const request = await apiRequest(interceptor, PAYMENTS_URL, 'put', paymentDetails.state)
 
     setProcessingPayment(true);
-    if(request.status === 200){
+    if(request?.status === 200){
       setToastInfo(`Thank you. Your payment has been recieved!`);
       setOpenToast(true);
     }

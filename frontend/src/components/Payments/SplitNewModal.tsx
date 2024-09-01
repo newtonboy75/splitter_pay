@@ -66,7 +66,7 @@ const SplitNewModal = ({ modalShow }: Props) => {
   const [showNewSplitCard, setShowNewSplitCard] = useState(false);
   const [serviceName, setServiceName] = useState("");
   const [splitSuccess, setSplitSucess] = useState(false);
-  const [sending, setSending] = useState(false)
+  const [sending, setSending] = useState(false);
 
   let nameRef = useRef<HTMLInputElement>(null);
   let emRef = useRef<HTMLInputElement>(null);
@@ -200,13 +200,19 @@ const SplitNewModal = ({ modalShow }: Props) => {
         splitters: split_members,
       };
 
-      const request = await apiRequest(interceptor, PAYMENTS_URL, 'post', formedSplit)
+      const request = await apiRequest(
+        interceptor,
+        PAYMENTS_URL,
+        "post",
+        formedSplit
+      );
 
-      setSending(true)
+      setSending(true);
 
-      if(request.status == 200){
+      if (request?.status == 200) {
         setSplitSucess(true);
       }
+
     }
   };
 

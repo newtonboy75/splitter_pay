@@ -27,7 +27,7 @@ const ActiveDetails = () => {
       const PAYMENTS_URL = `/api/payments/${paymentDetails.state._id}/delete`;
       const request = await apiRequest(interceptor, PAYMENTS_URL, 'delete', { data: { splitters: paymentDetails.state } })
 
-      if(request.status === 200){
+      if(request?.status === 200){
           setShowDialogAlert(false);
           setToastInfo(`Split has been cancelled.`);
           setOpenToast(true);
