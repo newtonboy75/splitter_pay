@@ -152,11 +152,11 @@ const Home = () => {
                 )}
 
                 <Suspense>
-                  {splitstoPay.map((split) => {
+                  {splitstoPay.map((split, key) => {
                     <h2 className="text-[#ececec] text-left font-extrabold mb-6">
                       Recent Splits
                     </h2>;
-                    return <SplitInvite toPay={split} />;
+                    return <SplitInvite toPay={split} key={key} />;
                   })}
                 </Suspense>
 
@@ -179,8 +179,8 @@ const Home = () => {
                   </h2>
                 )}
                 <Suspense>
-                  {paidSplitList.map((split) => {
-                    return <SplitsRecent split={split} />;
+                  {paidSplitList.map((split, key) => {
+                    return <SplitsRecent split={split} key={key} />;
                   })}
                 </Suspense>
 
@@ -191,8 +191,8 @@ const Home = () => {
                 )}
 
                 <Suspense>
-                  {invitedtoPay.map((split) => {
-                    return <SplitsRecentInvites split={split} />;
+                  {invitedtoPay.map((split, key) => {
+                    return <SplitsRecentInvites split={split} key={key} />;
                   })}
                 </Suspense>
               </div>

@@ -1,8 +1,14 @@
 import { Request, Response } from "express";
 import Payment from "../database/PaymentSchema";
 import { app, getWss } from "..";
+import { ResponseData } from "../utils/types/responseData";
 
 //get all splits
+
+/**
+ * @param {Request} req status, inititor, email
+ * @param {Response} res 
+ */
 export const getPayments = async (req: Request, res: Response) => {
   const { status, initiator, email } = req.query;
 
@@ -66,17 +72,27 @@ export const getPayments = async (req: Request, res: Response) => {
   res.status(200).json(payments);
 };
 
-export const getPaymentById = async (req: Request, res: Response) => {
+/**
+ * 
+ * @param req 
+ * @param res 
+ */
+export const getPaymentById = async () => {
   console.log("get all payments here");
 };
 
 //save new split to mongodb
+/**
+ * 
+ * @param req {}
+ * @param res 
+ */
 export const savePayment = async (req: Request, res: Response) => {
   const transaction = req.body;
   const payment_save = await Payment.create(transaction);
 
   if (payment_save) {
-    const message = {
+    const message: ResponseData  = {
       to: "splitters",
       data: transaction,
       disposition: "split_invite",
@@ -95,15 +111,17 @@ export const savePayment = async (req: Request, res: Response) => {
 };
 
 //payment transaction
+/**
+ * 
+ * @param req id, name, initiator_id, email, share_amount, payee_name
+ * @param res {}
+ */
 export const paySplit = async (req: Request, res: Response) => {
   console.log("get all payments here", req.body);
   const {
     id,
     name,
-    num_splitters,
-    initiator,
     initiator_id,
-    totalAmount,
     email,
     share_amount,
     payee_name,
@@ -123,8 +141,7 @@ export const paySplit = async (req: Request, res: Response) => {
   );
 
   if (payment) {
-    const message = {
-      initiator_id,
+    const message: ResponseData = {
       data: {
         payee: payee_name,
         share_amount: share_amount,
@@ -149,9 +166,12 @@ export const paySplit = async (req: Request, res: Response) => {
 };
 
 //initiator cancelled the transaction
+/**
+ * 
+ * @param req paymentId, req.body
+ * @param res 
+ */
 export const removeSplit = async (req: Request, res: Response) => {
-  // console.log(req.params.paymentId);
-  // console.log(req.body);
   const paymentId = req.params.paymentId;
   const data = req.body;
   try {
@@ -159,7 +179,7 @@ export const removeSplit = async (req: Request, res: Response) => {
     if (deletedDocument) {
       res.status(200).json("Split has been cancelled");
 
-      const message = {
+      const message: ResponseData  = {
         data: data,
         to: "splitters_cancelled",
         disposition: "payment_cancelled",

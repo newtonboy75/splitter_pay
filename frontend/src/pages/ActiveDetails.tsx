@@ -66,9 +66,9 @@ const ActiveDetails = () => {
                             Initiated on {formatDate(paymentDetails.state.date)}
                           </p>
                           <ul className="mt-6 mb-4 w-full">
-                            {splitters.map((splitter: any) => {
+                            {splitters.map((splitter: any, key: number) => {
                               return (
-                                <div>
+                                <div key={key}>
                                   <li className="mb-6">
                                     <div className="flex gap-6">
                                       <p>

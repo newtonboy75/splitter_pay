@@ -26,17 +26,17 @@ const Recents = () => {
                   </h3>
 
                   <ul className="mt-4 text-sm text-gray-800 space-y-2 text-left">
-                    <li>
+                    <li key="payee_">
                       {paymentDetails.state.payee_name} |{" "}
                       {paymentDetails.state.email}
                     </li>
 
-                    <li>Initiated by {paymentDetails.state.initiator}</li>
+                    <li key="inititedby_">Initiated by {paymentDetails.state.initiator}</li>
 
-                    <li className="font-medium">
+                    <li className="font-medium" key="paymentid_">
                       Payment ID: {paymentDetails.state.payment_id}
                     </li>
-                    <li className="font-medium">
+                    <li className="font-medium" key="completedon_">
                       Completed on: {formattedDateTime}
                     </li>
                   </ul>
@@ -44,20 +44,20 @@ const Recents = () => {
                   <hr className="border-gray-300 my-4" />
 
                   <ul className="text-left text-sm">
-                    <li>
+                    <li key="splitters_"> 
                       <h1 className="text-sm font-medium">Splitters</h1>
                     </li>
-                    <li className="p-2">
-                      {paymentDetails.state.splitters.map((splitter: any) => {
+                    <li className="p-2" key="splitter_">
+                      {paymentDetails.state.splitters.map((splitter: any, key: any) => {
                         return (
-                          <>
-                            <div className="p-1">
+                          <div key={key}>
+                            <div className="p-1" key={"key"+key}>
                               {splitter.name} | {splitter.email}
                             </div>
-                            <div className="p-1">
+                            <div className="p-1" key={"key_"+Math.random()}>
                               Paid on {formattedDateTime}
                             </div>
-                          </>
+                          </div>
                         );
                       })}
                     </li>

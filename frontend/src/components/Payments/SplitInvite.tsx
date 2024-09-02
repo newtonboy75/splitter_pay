@@ -2,13 +2,13 @@ import { Link } from "react-router-dom";
 import { getToken } from "../../utils/saveAuth";
 import paymentDetails from "../../utils/paymentDetails";
 
-const SplitInvite = ({ toPay }: any) => {
+const SplitInvite = ({ toPay, key }: any) => {
   const currentUser = getToken();
   const details = paymentDetails(toPay, currentUser);
 
   return (
     <>
-      <div className="bg-white shadow-[0_4px_12px_-5px_rgba(0,0,0,0.4)] w-full rounded-lg font-[sans-serif] overflow-hidden mx-auto mt-4">
+      <div key={key} className="bg-white shadow-[0_4px_12px_-5px_rgba(0,0,0,0.4)] w-full rounded-lg font-[sans-serif] overflow-hidden mx-auto mt-4">
         <div className="p-6">
           <p className="mt-2 mb-2 text-lg text-gray-500 leading-relaxed">
             {details.initiator} and {details.splitters.length - 1} other

@@ -2,14 +2,14 @@ import { Link } from "react-router-dom";
 import { getToken } from "../../utils/saveAuth";
 import paymentDetails from "../../utils/paymentDetails";
 
-const SplitsRecent = ({ split }: any) => {
+const SplitsRecent = ({ split, key }: any) => {
 
   const currentUser = getToken();
   const details = paymentDetails(split, currentUser)
 
   return (
     <>
-      <div className="bg-white shadow-[0_4px_12px_-5px_rgba(0,0,0,0.4)] w-full rounded-lg font-[sans-serif] overflow-hidden mx-auto mt-4 text-left">
+      <div key={key} className="bg-white shadow-[0_4px_12px_-5px_rgba(0,0,0,0.4)] w-full rounded-lg font-[sans-serif] overflow-hidden mx-auto mt-4 text-left">
         <div className="p-6">
           <h3 className="text-2xl font-semibold">{split.name}</h3>
           <p className="text-2xl  text-gray-500">
