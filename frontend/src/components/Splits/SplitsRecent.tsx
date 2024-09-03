@@ -1,28 +1,12 @@
 import { Link } from "react-router-dom";
 import { getToken } from "../../utils/saveAuth";
 import paymentDetails from "../../utils/paymentDetails";
-import genericIcon from "./../../assets/avatar.webp";
+import useUserAvatar from "../../hooks/useUserAvatar";
 
 const SplitsRecent = ({ split, key }: any) => {
   const currentUser = getToken();
   const details = paymentDetails(split, currentUser);
-
-  const userAvatar = () => {
-    return (
-      <div className="flex mr-2">
-        {split.splitters.map((split: any) => {
-          return (
-            <img
-              className="border-2 border-white rounded-full h-16 w-16 -mr-6"
-              src={genericIcon}
-              alt={split.status}
-              title={split.status}
-            />
-          );
-        })}
-      </div>
-    );
-  };
+  const userAvatar = useUserAvatar(split)
 
   return (
     <>
@@ -44,7 +28,7 @@ const SplitsRecent = ({ split, key }: any) => {
           <p className="mt-2 text-sm text-gray-500 leading-relaxed">
             Splitters
           </p>
-          <div className="space-x-10 flex items-center">{userAvatar()}</div>
+          <div className="space-x-10 flex items-center">{userAvatar}</div>
           <div className="float-right mb-6 mt-4">
             <Link
               type="button"

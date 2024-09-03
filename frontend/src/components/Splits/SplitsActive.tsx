@@ -1,23 +1,8 @@
 import { Link } from "react-router-dom";
-import genericIcon from "./../../assets/avatar.webp";
+import useUserAvatar from "../../hooks/useUserAvatar";
 
 const SplitsActive = ({ split }: any) => {
-  const userAvatar = () => {
-    return (
-      <div className="flex mr-2">
-        {split.splitters.map((split: any) => {
-          return (
-            <img
-              className="border-2 border-white rounded-full h-16 w-16 -mr-6"
-              src={genericIcon}
-              alt={split.status}
-              title={split.status}
-            />
-          );
-        })}
-      </div>
-    );
-  };
+  const userAvatar = useUserAvatar(split)
   return (
     <>
       <div className="bg-white shadow-[0_4px_12px_-5px_rgba(0,0,0,0.4)] w-full rounded-lg font-[sans-serif] overflow-hidden mx-auto mt-4 text-left">
@@ -35,7 +20,7 @@ const SplitsActive = ({ split }: any) => {
           <p className="mt-2 text-sm text-gray-500 leading-relaxed">
             Splitters
           </p>
-          <div className="space-x-10 flex items-center">{userAvatar()}</div>
+          <div className="space-x-10 flex items-center">{userAvatar}</div>
           <div className="float-right mb-6 mt-2">
             <Link
               type="button"
