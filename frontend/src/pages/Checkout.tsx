@@ -1,7 +1,7 @@
 import { useLocation } from "react-router-dom";
 import { useAuthInterceptor } from "../hooks/useAuthInterceptor";
 import { useState } from "react";
-import DialogSuccess from "../components/Payments/DialogSuccess";
+import DialogSuccess from "../components/Splits/DialogSuccess";
 import Toast from "../components/Main/Toast";
 import { apiRequest } from "../utils/api/axios";
 

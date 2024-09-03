@@ -1,6 +1,23 @@
 import { Link } from "react-router-dom";
+import genericIcon from "./../../assets/avatar.webp";
 
 const SplitsActive = ({ split }: any) => {
+  const userAvatar = () => {
+    return (
+      <div className="flex mr-2">
+        {split.splitters.map((split: any) => {
+          return (
+            <img
+              className="border-2 border-white rounded-full h-16 w-16 -mr-6"
+              src={genericIcon}
+              alt={split.status}
+              title={split.status}
+            />
+          );
+        })}
+      </div>
+    );
+  };
   return (
     <>
       <div className="bg-white shadow-[0_4px_12px_-5px_rgba(0,0,0,0.4)] w-full rounded-lg font-[sans-serif] overflow-hidden mx-auto mt-4 text-left">
@@ -18,23 +35,7 @@ const SplitsActive = ({ split }: any) => {
           <p className="mt-2 text-sm text-gray-500 leading-relaxed">
             Splitters
           </p>
-          <div className="space-x-10 flex items-center justify-center">
-            {split.splitters.map((split: any) => {
-              return (
-                <div key={split.id} className="relative inline-block">
-                  <img
-                    src="https://readymadeui.com/team-4.webp"
-                    className="w-16 h-16 rounded-full"
-                  />
-                  {split.payment_status === 3 ? (
-                    <span className="h-3 w-3 rounded-full border border-white bg-green-500 block absolute bottom-1 right-0"></span>
-                  ) : (
-                    <span className="h-3 w-3 rounded-full border border-white bg-gray-500 block absolute bottom-1 right-0"></span>
-                  )}
-                </div>
-              );
-            })}
-          </div>
+          <div className="space-x-10 flex items-center">{userAvatar()}</div>
           <div className="float-right mb-6 mt-2">
             <Link
               type="button"

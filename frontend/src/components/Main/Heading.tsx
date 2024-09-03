@@ -1,6 +1,6 @@
 import { useState } from "react";
 import logo from "../../assets/Klearly-Logo-@2x.webp";
-import SplitNewModal from "../Payments/SplitNewModal";
+import SplitNewModal from "../Splits/SplitNewModal";
 import { useLocation } from "react-router-dom";
 
 const Heading = () => {

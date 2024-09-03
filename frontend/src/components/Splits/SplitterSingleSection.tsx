@@ -1,4 +1,4 @@
-import avatar1 from "../../assets/thumb1.png";
+import avatar1 from "../../assets/avatar.webp"
 import { getToken } from "../../utils/saveAuth";
 import { SplitterSingleSectionProps } from "../../utils/types/interface";
 

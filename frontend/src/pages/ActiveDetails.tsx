@@ -1,10 +1,11 @@
 import { useLocation } from "react-router-dom";
-import DialogAlert from "../components/Payments/DialogAlert";
+import DialogAlert from "../components/Splits/DialogAlert";
 import { useState } from "react";
 import { useAuthInterceptor } from "../hooks/useAuthInterceptor";
 import Toast from "../components/Main/Toast";
 import { formatDate } from "../utils/formatDate";
 import { apiRequest } from "../utils/api/axios";
+import genericIcon from "./../assets/avatar.webp"
 
 const ActiveDetails = () => {
   const paymentDetails = useLocation();
@@ -73,7 +74,7 @@ const ActiveDetails = () => {
                                     <div className="flex gap-6">
                                       <p>
                                         <img
-                                          src="https://readymadeui.com/team-4.webp"
+                                          src={genericIcon}
                                           className="w-16 h-16 rounded-full"
                                         />
                                       </p>

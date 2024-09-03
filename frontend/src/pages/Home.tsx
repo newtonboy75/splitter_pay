@@ -1,9 +1,9 @@
 import { useState, useEffect, Suspense } from "react";
-import SplitInvite from "../components/Payments/SplitInvite";
-import SplitsActive from "../components/Payments/SplitsActive";
-import SplitsRecent from "../components/Payments/SplitsRecent";
+import SplitInvite from "../components/Splits/SplitInvite";
+import SplitsActive from "../components/Splits/SplitsActive";
+import SplitsRecent from "../components/Splits/SplitsRecent";
 import { useAuthInterceptor } from "../hooks/useAuthInterceptor";
-import SplitsRecentInvites from "../components/Payments/SplitsRecentInvites";
+import SplitsRecentInvites from "../components/Splits/SplitsRecentInvites";
 import { apiRequest } from "../utils/api/axios";
 import { getToken } from "../utils/saveAuth";
 import Toast from "../components/Main/Toast";
@@ -71,14 +71,12 @@ const Home = () => {
               return splitter;
             }
           );
-    
 
           setToastInfo(
             `${initiator[0].name} cancelled ${data.data.splitters.name} and don't want to split the bill anymore.`
           );
           setOpenToast(true);
           setTriggerRefresh(Math.random());
-
         }
       }
     }
@@ -106,7 +104,7 @@ const Home = () => {
     ];
 
     endPoints.map(async (endPoint) => {
-      const request = await apiRequest(interceptor, endPoint.url, 'get');
+      const request = await apiRequest(interceptor, endPoint.url, "get");
 
       if (request?.status === 200) {
         const list = request.data.reverse();
@@ -131,7 +129,7 @@ const Home = () => {
   return (
     <>
       <div className="text-right pt-32 pb-[28px] pl-6 pr-6 text-gray-200 font-medium]">
-        Hello {current_user.name}
+      <div className="p-2">Hello {current_user.name}</div>
       </div>
       <div className="pb-10">
         <div className="font-[sans-serif] text-left">

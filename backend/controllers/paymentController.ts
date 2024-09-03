@@ -3,9 +3,8 @@ import Payment from "../database/PaymentSchema";
 import { app, getWss } from "..";
 import { ResponseData } from "../utils/types/responseData";
 
-//get all splits
-
 /**
+ * get all splits
  * @param {Request} req status, inititor, email
  * @param {Response} res 
  */
@@ -81,9 +80,9 @@ export const getPaymentById = async () => {
   console.log("get all payments here");
 };
 
-//save new split to mongodb
+
 /**
- * 
+ * Save new split to mongodb
  * @param req {}
  * @param res 
  */
@@ -110,9 +109,9 @@ export const savePayment = async (req: Request, res: Response) => {
   res.status(200).json(transaction);
 };
 
-//payment transaction
+//
 /**
- * 
+ * Payment transaction
  * @param req id, name, initiator_id, email, share_amount, payee_name
  * @param res {}
  */
@@ -165,9 +164,8 @@ export const paySplit = async (req: Request, res: Response) => {
   res.status(200).json("Payment successful");
 };
 
-//initiator cancelled the transaction
 /**
- * 
+ * Initiator cancelled the transaction
  * @param req paymentId, req.body
  * @param res 
  */
