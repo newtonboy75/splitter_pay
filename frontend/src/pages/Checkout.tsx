@@ -4,6 +4,7 @@ import { useState } from "react";
 import DialogSuccess from "../components/Splits/DialogSuccess";
 import Toast from "../components/Main/Toast";
 import { apiRequest } from "../utils/api/axios";
+import useBackButton from "../hooks/useBackButton";
 
 const Checkout = () => {
   const paymentDetails = useLocation();
@@ -33,12 +34,7 @@ const Checkout = () => {
 
   return (
     <div className="font-[sans-serif] bg-gradient-to-tr from-gray-200 via-gray-100 to-gray-50 h-screen pt-28 lg:pt-36 lg:px-52 lg:pr-52">
-      <a
-        className="text-left float-left ml-6"
-        onClick={() => (window.location.href = "/")}
-      >
-        &lsaquo; Back
-      </a>
+      {useBackButton()}
       <div className="max-w-7xl max-lg:max-w-4xl mx-auto p-6">
         <h2 className="text-2xl font-extrabold text-gray-800">Your split</h2>
 

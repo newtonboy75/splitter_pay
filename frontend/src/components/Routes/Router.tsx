@@ -4,8 +4,8 @@ import Login from "../../pages/Login";
 import Root from "../../pages/Root";
 import ProtectedRoute from "./ProtectedRoute";
 import Checkout from "../../pages/Checkout";
-import Recents from "../../pages/Recents";
 import ActiveDetails from "../../pages/ActiveDetails";
+import CompletedSplits from "../../pages/CompletedSplit";
 
 export const router = createBrowserRouter([
   {
@@ -24,7 +24,7 @@ export const router = createBrowserRouter([
       },
       {
         path: "/paid/:id",
-        element: <ProtectedRoute><Recents /></ProtectedRoute>,
+        element: <ProtectedRoute><CompletedSplits /></ProtectedRoute>,
 
       },
       {

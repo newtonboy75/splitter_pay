@@ -6,6 +6,7 @@ import Toast from "../components/Main/Toast";
 import { formatDate } from "../utils/formatDate";
 import { apiRequest } from "../utils/api/axios";
 import genericIcon from "./../assets/avatar.webp"
+import useBackButton from "../hooks/useBackButton";
 
 const ActiveDetails = () => {
   const paymentDetails = useLocation();
@@ -43,12 +44,7 @@ const ActiveDetails = () => {
   return (
     <>
       <div className="h-screen pt-32 lg:w-1/2 mx-auto">
-        <a
-          className="text-left text-white float-left ml-6"
-          onClick={() => (window.location.href = "/")}
-        >
-          &lsaquo; Back
-        </a>
+      {useBackButton()}
         <div className="p-4 font-[sans-serif] ">
           <h1 className="text-2xl text-white font-bold mb-6">Active Split</h1>
 

@@ -10,16 +10,16 @@ import { useSplitsData } from "../hooks/useSplitsData";
 import { useWebSocketHandler } from "../hooks/useWebSocketHandler";
 
 const Home = () => {
-  const current_user = getToken(); //get current logged user
+  const currentUser = getToken(); //get current logged user
   const interceptor = useAuthInterceptor(); //axios interceptor
 
   //start Websocket
   const { triggerRefresh, toastInfo, openToast, setOpenToast } =
-    useWebSocketHandler("ws://localhost:3000", current_user);
+    useWebSocketHandler("ws://localhost:3000", currentUser);
 
   //get all incoming messages from Websocket
   const { activeSplitList, paidSplitList, splitstoPay, invitedtoPay } =
-    useSplitsData(current_user, interceptor, triggerRefresh);
+    useSplitsData(currentUser, interceptor, triggerRefresh);
   const handleCloseToast = () => {
     setOpenToast(false);
   };
@@ -27,7 +27,7 @@ const Home = () => {
   return (
     <>
       <div className="text-right pt-32 pb-[28px] pl-6 pr-6 text-gray-200 font-medium]">
-        <div className="p-2">Hello {current_user.name}</div>
+        <div className="p-2">Hello {currentUser.name}</div>
       </div>
       <div className="pb-10">
         <div className="font-[sans-serif] text-left">
