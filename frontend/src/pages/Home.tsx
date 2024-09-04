@@ -6,8 +6,8 @@ import { useAuthInterceptor } from "../hooks/useAuthInterceptor";
 import SplitsRecentInvites from "../components/Splits/SplitsRecentInvites";
 import { getToken } from "../utils/saveAuth";
 import Toast from "../components/Main/Toast";
-import { useSplitsData } from "./useSplitsData";
-import { useWebSocketHandler } from "./useWebSocketHandler";
+import { useSplitsData } from "../hooks/useSplitsData";
+import { useWebSocketHandler } from "../hooks/useWebSocketHandler";
 
 const Home = () => {
   const current_user = getToken(); //get current logged user
