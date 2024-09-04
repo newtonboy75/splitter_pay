@@ -1,14 +1,14 @@
-import { useEffect, useRef } from "react";
+import { useEffect } from "react";
 
 const useBackButton = () => {
-  const buttonRef = useRef<HTMLButtonElement>(null);
   useEffect(() => {
-    buttonRef.current?.focus();
+    window.scrollTo({
+      top: 0,
+    });
   }, []);
   return (
     <>
       <button
-        ref={buttonRef}
         className="text-left float-left ml-6"
         onClick={() => (window.location.href = "/")}
       >
