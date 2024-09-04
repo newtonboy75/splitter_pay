@@ -1,127 +1,25 @@
-import { useState, useEffect, Suspense } from "react";
+import { Suspense } from "react";
 import SplitInvite from "../components/Splits/SplitInvite";
 import SplitsActive from "../components/Splits/SplitsActive";
 import SplitsRecent from "../components/Splits/SplitsRecent";
 import { useAuthInterceptor } from "../hooks/useAuthInterceptor";
 import SplitsRecentInvites from "../components/Splits/SplitsRecentInvites";
-import { apiRequest } from "../utils/api/axios";
 import { getToken } from "../utils/saveAuth";
 import Toast from "../components/Main/Toast";
-import useWebSocket from "../hooks/useWebSocket";
+import { useSplitsData } from "./useSplitsData";
+import { useWebSocketHandler } from "./useWebSocketHandler";
 
 const Home = () => {
   const current_user = getToken(); //get current logged user
   const interceptor = useAuthInterceptor(); //axios interceptor
-  const [activeSplitList, setActiveSplitList] = useState([]);
-  const [paidSplitList, setPaidSplitList] = useState([]);
-  const [splitstoPay, setSplitsToPay] = useState([]);
-  const [invitedtoPay, setInvitedToPay] = useState([]);
-  const [openToast, setOpenToast] = useState(false);
-  const [toastInfo, setToastInfo] = useState("");
-  const [triggerRefresh, setTriggerRefresh] = useState(0); //re-renders upon message from websocket
 
-  //start websocket
-  const { lastMessage, readyState } = useWebSocket("ws://localhost:3000");
+  //start Websocket
+  const { triggerRefresh, toastInfo, openToast, setOpenToast } =
+    useWebSocketHandler("ws://localhost:3000", current_user);
 
-  useEffect(() => {
-    if (lastMessage === "WebSocket connection established") {
-      setTriggerRefresh(Math.random());
-    }
-
-    if (lastMessage !== "ok bye") {
-      if (typeof Object(lastMessage) && lastMessage !== null) {
-        const data = JSON.parse(lastMessage);
-
-        if (data.to === "splitters") {
-          const splitter = data.data.splitters.filter(
-            (splitter: { email: any }) => {
-              return splitter.email === current_user.email;
-            }
-          );
-
-          const initiator = data.data.splitters.filter(
-            (splitter: { is_initiator: boolean }) => {
-              return splitter.is_initiator === true;
-            }
-          );
-
-          if (splitter[0]["is_initiator"] !== true) {
-            setToastInfo(
-              `${initiator[0]["name"]} would like to split the cost for ${data.data.name} for $${splitter[0]["share_amount"]}`
-            );
-            setOpenToast(true);
-          }
-          setTriggerRefresh(Math.random());
-        } else if (data.to === "initiator") {
-          if (current_user.id === data.data.initiator_id) {
-            setToastInfo(
-              `Payment of $${data.data.share_amount} was received from ${data.data.payee} for ${data.data.name}.`
-            );
-            setOpenToast(true);
-          } else if (data.data.email === current_user.email) {
-            setToastInfo(`Thank you. Your payment has been recieved!`);
-            setOpenToast(true);
-          }
-
-          setTriggerRefresh(Math.random());
-        } else if (data.disposition === "payment_cancelled") {
-          //console.log(data);
-          const initiator = data.data.splitters.splitters.filter(
-            (splitter: any) => {
-              return splitter;
-            }
-          );
-
-          setToastInfo(
-            `${initiator[0].name} cancelled ${data.data.splitters.name} and don't want to split the bill anymore.`
-          );
-          setOpenToast(true);
-          setTriggerRefresh(Math.random());
-        }
-      }
-    }
-  }, [lastMessage, readyState]);
-
-  //get all recent splits
-  useEffect(() => {
-    const endPoints = [
-      {
-        url: `/api/payments?status=active&initiator=${current_user.id}`,
-        toState: "active",
-      },
-      {
-        url: `/api/payments?status=paid&initiator=${current_user.id}`,
-        toState: "paid",
-      },
-      {
-        url: `/api/payments?status=toPay&email=${current_user.email}`,
-        toState: "topay",
-      },
-      {
-        url: `/api/payments?status=invited&email=${current_user.email}`,
-        toState: "invited",
-      },
-    ];
-
-    endPoints.map(async (endPoint) => {
-      const request = await apiRequest(interceptor, endPoint.url, "get");
-
-      if (request?.status === 200) {
-        const list = request.data.reverse();
-
-        if (endPoint.toState === "active") {
-          setActiveSplitList(list); //save all active splits
-        } else if (endPoint.toState === "paid") {
-          setPaidSplitList(list); //save all completed splits
-        } else if (endPoint.toState === "topay") {
-          setSplitsToPay(list); //save all pending for payment
-        } else {
-          setInvitedToPay(list); //save all new splits
-        }
-      }
-    });
-  }, [triggerRefresh]);
-
+  //get all incoming messages from Websocket
+  const { activeSplitList, paidSplitList, splitstoPay, invitedtoPay } =
+    useSplitsData(current_user, interceptor, triggerRefresh);
   const handleCloseToast = () => {
     setOpenToast(false);
   };
@@ -129,7 +27,7 @@ const Home = () => {
   return (
     <>
       <div className="text-right pt-32 pb-[28px] pl-6 pr-6 text-gray-200 font-medium]">
-      <div className="p-2">Hello {current_user.name}</div>
+        <div className="p-2">Hello {current_user.name}</div>
       </div>
       <div className="pb-10">
         <div className="font-[sans-serif] text-left">
