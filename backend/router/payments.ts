@@ -11,10 +11,10 @@ import {
 import { verifyAuth } from "../middleware/verifyAuth";
 
 const checkForSQLInjection = (value: string) => {
-  const sqlInjectionPattern =
-    /(\b(SELECT|INSERT|DELETE|UPDATE|DROP|ALTER|EXEC|UNION|--|;|\/\*)\b)/i;
-  if (sqlInjectionPattern.test(value)) {
-    throw new Error("SQL Injection attempt detected");
+  const mongoInjection =
+    /(\b(\$where|\$gt|\$lt|\$ne|\$in|\$nin|\$eq|\$regex|\$exists|\$mod|\$all|\$size|\$nor|\$or|\$and|\$not|\$expr|\$jsonSchema|\$geoIntersects|\$geoWithin|\$near|\$nearSphere|\$text|\$where|function|eval)\b|\{.*?\}|\bdb\.(\w+)\.\w+)/i;
+  if (mongoInjection.test(value)) {
+    throw new Error("MongoDB Injection attempt detected");
   }
   return true;
 };
@@ -23,7 +23,7 @@ export default (router: express.Router) => {
   /**
    * GET all payments
    * @param {request param}
-   * 
+   *
    */
   router.get("/payments", verifyAuth, getPayments);
 
