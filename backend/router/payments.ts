@@ -20,8 +20,23 @@ const checkForSQLInjection = (value: string) => {
 };
 
 export default (router: express.Router) => {
+  /**
+   * GET all payments
+   * @param {request param}
+   * 
+   */
   router.get("/payments", verifyAuth, getPayments);
+
+  /**
+   * GET payment by paymentID
+   * @param paymentId
+   */
   router.get("/payments/:paymentId", verifyAuth, getPaymentById);
+
+  /**
+   * POST payment
+   * @param {paymentDetails}
+   */
   router.post(
     "/payments",
     verifyAuth,
@@ -41,6 +56,11 @@ export default (router: express.Router) => {
     ],
     savePayment
   );
+
+  /**
+   * PUT payment id
+   * @param {paymentDetails}
+   */
   router.put(
     "/payments/:paymentId/pay",
     verifyAuth,
@@ -64,5 +84,10 @@ export default (router: express.Router) => {
     ],
     paySplit
   );
+
+  /**
+   * DELETE payment from databas
+   * @param paymentId
+   */
   router.delete("/payments/:paymentId/delete", verifyAuth, removeSplit);
 };
