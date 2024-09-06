@@ -52,7 +52,7 @@ export const useWebSocketHandler = (url: any, current_user: any) => {
         (splitter: { email: string; is_initiator: boolean }) => {
           if (splitter.email === current_user.email && !splitter.is_initiator) {
             setToastInfo(
-              `${initiator[0]["name"]} cancelled ${data.data.splitters.name} and don't want to split the bill anymore.`
+              `${initiator[0]["name"]} cancelled ${data.data.splitters.name} and doesn't want to split the bill anymore.`
             );
             setOpenToast(true);
           }

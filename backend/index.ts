@@ -7,7 +7,8 @@ import DbConnect from "./database/DbConnector";
 import { errorHandler } from "./middleware/authErrors";
 import http from "http";
 import { UserInfo } from "./utils/types/users";
-import expressWs from 'express-ws';
+import expressWs from "express-ws";
+import { rateLimiter } from "./middleware/rateLimiter";
 
 dotenv.config();
 
@@ -27,7 +28,7 @@ app.use(express.json());
 app.use(cookieParser());
 app.use(express.urlencoded({ extended: true }));
 app.use(errorHandler);
-
+app.use(rateLimiter);
 
 //connect to Atlas
 DbConnect();
@@ -49,10 +50,10 @@ app.get("/", (req, res) => {
   res.send("Hello from Express");
 });
 
-app.ws('/', function(ws, req) {
-  ws.on('message', function(msg) {
+app.ws("/", function (ws, req) {
+  ws.on("message", function (msg) {
     console.log(msg);
-    ws.send("ok bye")
+    ws.send("ok bye");
   });
   //console.log('socket', req);
 });
