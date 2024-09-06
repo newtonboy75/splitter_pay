@@ -28,7 +28,7 @@ app.use(express.json());
 app.use(cookieParser());
 app.use(express.urlencoded({ extended: true }));
 app.use(errorHandler);
-app.use(rateLimiter);
+//app.use(rateLimiter);
 
 //connect to Atlas
 DbConnect();

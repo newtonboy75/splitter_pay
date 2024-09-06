@@ -2,11 +2,11 @@ import { Request, Response } from "express";
 import Payment from "../database/PaymentSchema";
 import { app, getWss } from "..";
 import { ResponseData } from "../utils/types/responseData";
-
+import { validationResult } from "express-validator";
 /**
  * get all splits
  * @param {Request} req status, inititor, email
- * @param {Response} res 
+ * @param {Response} res
  */
 export const getPayments = async (req: Request, res: Response) => {
   const { status, initiator, email } = req.query;
@@ -35,7 +35,6 @@ export const getPayments = async (req: Request, res: Response) => {
         },
       });
     } else if (status === "toPay") {
-
       //Ones you have to pay
       payments = await Payment.find({
         splitters: {
@@ -48,7 +47,6 @@ export const getPayments = async (req: Request, res: Response) => {
         },
       });
     } else if (status === "invited") {
-      
       //Ones you have to pay after invitation to split
       payments = await Payment.find({
         splitters: {
@@ -72,26 +70,31 @@ export const getPayments = async (req: Request, res: Response) => {
 };
 
 /**
- * 
- * @param req 
- * @param res 
+ *
+ * @param req
+ * @param res
  */
 export const getPaymentById = async () => {
   console.log("get all payments here");
 };
 
-
 /**
  * Save new split to mongodb
  * @param req {}
- * @param res 
+ * @param res
  */
 export const savePayment = async (req: Request, res: Response) => {
+  const validationErrors = validationResult(req);
+
+  if (!validationErrors.isEmpty()) {
+    return res.status(400).json({ errors: validationErrors.array() });
+  }
+
   const transaction = req.body;
   const payment_save = await Payment.create(transaction);
 
   if (payment_save) {
-    const message: ResponseData  = {
+    const message: ResponseData = {
       to: "splitters",
       data: transaction,
       disposition: "split_invite",
@@ -116,15 +119,13 @@ export const savePayment = async (req: Request, res: Response) => {
  * @param res {}
  */
 export const paySplit = async (req: Request, res: Response) => {
-  console.log("get all payments here", req.body);
-  const {
-    id,
-    name,
-    initiator_id,
-    email,
-    share_amount,
-    payee_name,
-  } = req.body;
+  const validationErrors = validationResult(req);
+
+  if (!validationErrors.isEmpty()) {
+    return res.status(400).json({ errors: validationErrors.array() });
+  }
+
+  const { id, name, initiator_id, email, share_amount, payee_name } = req.body;
   const timestamp = new Date();
   const payment = await Payment.updateOne(
     {
@@ -167,7 +168,7 @@ export const paySplit = async (req: Request, res: Response) => {
 /**
  * Initiator cancelled the transaction
  * @param req paymentId, req.body
- * @param res 
+ * @param res
  */
 export const removeSplit = async (req: Request, res: Response) => {
   const paymentId = req.params.paymentId;
@@ -177,7 +178,7 @@ export const removeSplit = async (req: Request, res: Response) => {
     if (deletedDocument) {
       res.status(200).json("Split has been cancelled");
 
-      const message: ResponseData  = {
+      const message: ResponseData = {
         data: data,
         to: "splitters_cancelled",
         disposition: "payment_cancelled",

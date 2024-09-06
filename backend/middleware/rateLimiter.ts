@@ -1,6 +1,5 @@
 import express, { Request, Response, NextFunction } from "express";
-
-const app = express();
+import { app } from "..";
 
 const RATE_LIMIT_TIME = 15 * 60 * 1000; // 1 minutes
 const MAX_REQUEST_LIMIT = 100;
@@ -16,6 +15,7 @@ const trackedLimitData: { [key: string]: RateLimiterInfo } = {};
 // Use rate limiter
 const rateLimiter = (req: Request, res: Response, next: NextFunction) => {
   const ip: any = req.ip;
+  //console.log(req)
 
   if (!trackedLimitData[ip]) {
     // User made request for the first time
