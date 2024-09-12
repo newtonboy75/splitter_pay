@@ -65,7 +65,7 @@ const SplitNewModal = ({ modalShow }: Props) => {
   const [amountError, setAmmoutError] = useState("");
   const [showNewSplitCard, setShowNewSplitCard] = useState(false);
   const [serviceName, setServiceName] = useState("");
-  const [splitSuccess, setSplitSucess] = useState(false);
+  const [splitSuccess] = useState(false);
   const [sending, setSending] = useState(false);
 
   let nameRef = useRef<HTMLInputElement>(null);
