@@ -1,8 +1,8 @@
 import express, { Request, Response, NextFunction } from "express";
 import { app } from "..";
 
-const RATE_LIMIT_TIME = 15 * 60 * 1000; // 1 minutes
-const MAX_REQUEST_LIMIT = 100;
+const RATE_LIMIT_TIME = 15 * 60 * 1000; // 15 minutes
+const MAX_REQUEST_LIMIT = 200;
 
 interface RateLimiterInfo {
   requests: number;

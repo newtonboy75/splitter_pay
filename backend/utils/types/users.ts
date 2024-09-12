@@ -5,6 +5,7 @@ export interface User extends Document {
   email: string;
   password: string;
   comparePassword: (enteredPassword: string) => boolean;
+  accessToken?: string
 }
 
 export interface UserInfo {

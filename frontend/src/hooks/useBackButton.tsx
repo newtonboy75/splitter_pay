@@ -1,6 +1,8 @@
 import { useEffect } from "react";
+import { useNavigate } from "react-router-dom";
 
 const useBackButton = () => {
+  const navigate = useNavigate();
   useEffect(() => {
     window.scrollTo({
       top: 0,
@@ -10,7 +12,7 @@ const useBackButton = () => {
     <>
       <button
         className="text-left float-left ml-6"
-        onClick={() => (window.location.href = "/")}
+        onClick={() => navigate("/")}
       >
         &lsaquo; Back
       </button>

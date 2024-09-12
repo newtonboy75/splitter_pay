@@ -1,18 +1,17 @@
-import React, { useEffect } from "react";
-import { useNavigate } from "react-router-dom";
+import React, {  } from "react";
+import { Navigate } from "react-router-dom";
 import { getToken } from "../../utils/saveAuth";
 
 const ProtectedRoute: React.FC<{ children: React.ReactNode }> = ({
   children,
 }): React.ReactNode => {
-  const navigate = useNavigate();
+ 
   const userData = getToken();
 
-  useEffect(() => {
-    if (userData === null) {
-      navigate("/login");
+    if (!userData) {
+      return <Navigate to="/login" replace />;
     }
-  });
+
   return children;
 };
 

@@ -210,7 +210,8 @@ const SplitNewModal = ({ modalShow }: Props) => {
       setSending(true);
 
       if (request?.status == 200) {
-        setSplitSucess(true);
+        //setSplitSucess(true);
+        handleCloseToast()
       }
 
     }

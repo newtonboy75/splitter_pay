@@ -27,7 +27,7 @@ export const useWebSocketHandler = (url: any, current_user: any) => {
       );
       data.data.splitters.map(
         (invitee: { email: string; is_initiator: boolean }) => {
-          if (invitee.email === current_user.email && !invitee.is_initiator) {
+          if (invitee.email === current_user.email || initiator.email == current_user.email) {
             setToastInfo(
               `${initiator[0]["name"]} would like to split the cost for ${data.data.name} for $${initiator[0]["share_amount"]}`
             );

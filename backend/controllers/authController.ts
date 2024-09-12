@@ -18,6 +18,9 @@ const authenticateUser = async (req: Request, res: Response) => {
       user._id.toString()
     );
 
+    user.accessToken = token;
+    await user.save();
+
     res.status(200).json({
       id: user._id,
       name: user.name,

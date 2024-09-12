@@ -2,20 +2,34 @@ import { useEffect } from "react";
 import { axiosPrivate } from "../utils/api/axios";
 import useRefreshToken from "./useRefreshToken";
 import useAuth from "./useAuth";
-import { getToken, setToken } from "../utils/saveAuth";
 
 export const useAuthInterceptor = () => {
   const refresh = useRefreshToken();
   const { auth } = useAuth();
+  const storedAuth = sessionStorage?.getItem("tempAuthToken")!;
 
   useEffect(() => {
     const requestIntercept = axiosPrivate.interceptors.request.use(
-      async (config: { headers: any }) => {
-        const token = await getToken().accessToken;
+      async (config) => {
+        let token = auth?.accessToken; //check if authToken is set
 
-        if (token !== "") {
-          config.headers.Authorization = `Bearer ${token}`;
+        if (!auth?.accessToken) {
+          //user reloaded, use sessionStorge dta
+          await new Promise((resolve) => {
+            const storedAccessToken = JSON.parse(storedAuth);
+
+            token = storedAccessToken.accessToken;
+            if (typeof storedAccessToken.accessToken === "string") {
+              token = storedAccessToken.accessToken;
+            }
+
+            resolve(true);
+          });
         }
+
+        config.headers.Authorization = `Bearer ${token}`;
+        sessionStorage.removeItem("tempAuthToken"); //remove stored auth from sessionStorage immediately
+
         return config;
       },
       (error: any) => {
@@ -26,6 +40,7 @@ export const useAuthInterceptor = () => {
     const responseIntercept = axiosPrivate.interceptors.response.use(
       (response) => response,
       async (error) => {
+   
         const prevReq = error.config;
         if (
           error?.respose?.status === 403 &&
@@ -34,7 +49,7 @@ export const useAuthInterceptor = () => {
         ) {
           prevReq.sent = true;
           const newAccessToken = await refresh();
-          setToken(JSON.stringify(newAccessToken));
+
           prevReq.headers["Authorization"] = `Bearer ${newAccessToken}`;
           return axiosPrivate(prevReq);
         }

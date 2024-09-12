@@ -1,23 +1,17 @@
-import { Outlet, useNavigate } from "react-router-dom";
+import { Navigate, Outlet } from "react-router-dom";
 import Heading from "../components/Main/Heading";
-import { getToken } from "../utils/saveAuth";
-import { useEffect } from "react";
+import useAuth from "../hooks/useAuth";
 
 const Root = () => {
-  const userData = getToken();
-  const navigate = useNavigate();
+  const { auth } = useAuth();
 
-  useEffect(() => {
-    if (!userData) {
-      navigate("/login");
-    }
-  }, [userData]);
-
-  return (
+  return auth ? (
     <>
-      {userData && <Heading />}
-      {userData && <Outlet />}
+      <Heading />
+      <Outlet />
     </>
+  ) : (
+    <Navigate to="/login" replace />
   );
 };
 

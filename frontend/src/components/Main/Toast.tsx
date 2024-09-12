@@ -1,13 +1,12 @@
-import { useLocation } from "react-router-dom";
+import { useLocation, useNavigate } from "react-router-dom";
 
 const Toast = ({ info, closeToast }: any) => {
-  const { pathname } = useLocation();
+  useLocation();
+  const navigate = useNavigate();
 
   const handleCloseToast = () => {
     closeToast();
-    if (pathname.includes("/payment/") || pathname.includes("/active/")) {
-      location.href = "/";
-    }
+    navigate("/");
   };
 
   return (

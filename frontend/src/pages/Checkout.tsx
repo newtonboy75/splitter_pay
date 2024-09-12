@@ -24,11 +24,11 @@ const Checkout = () => {
     if(request?.status === 200){
       setToastInfo(`Thank you. Your payment has been recieved!`);
       setOpenToast(true);
+      
     }
   };
 
   const handleCloseToast = () => {
-    //setShowModal(false);
     setOpenToast(false);
   };
 
@@ -123,6 +123,7 @@ const Checkout = () => {
               {processingPayment
                 ? "Processing payment, please wait..."
                 : "Make Payment"}
+                
             </button>
           </div>
         </div>

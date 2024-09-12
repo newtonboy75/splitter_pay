@@ -9,7 +9,7 @@ export const generateTokens = async (res: Response, userId: string) => {
   });
 
   const refreshToken = jwt.sign({ userId }, "refresh_secret", {
-    expiresIn: "1d",
+    expiresIn: "1h",
   });
 
   res.cookie("jwt", token, {

@@ -5,7 +5,7 @@ import { useAuthInterceptor } from "../hooks/useAuthInterceptor";
 import Toast from "../components/Main/Toast";
 import { formatDate } from "../utils/formatDate";
 import { apiRequest } from "../utils/api/axios";
-import genericIcon from "./../assets/avatar.webp"
+import genericIcon from "./../assets/avatar.webp";
 import useBackButton from "../hooks/useBackButton";
 
 const ActiveDetails = () => {
@@ -22,17 +22,20 @@ const ActiveDetails = () => {
 
   //delete submission
   const handleOption = async (option: boolean) => {
-    
-    if (option === false) { //close dialog alert
+    if (option === false) {
+      //close dialog alert
       setShowDialogAlert(false);
-    } else { //submit if yes
+    } else {
+      //submit if yes
       const PAYMENTS_URL = `/api/payments/${paymentDetails.state._id}/delete`;
-      const request = await apiRequest(interceptor, PAYMENTS_URL, 'delete', { data: { splitters: paymentDetails.state } })
+      const request = await apiRequest(interceptor, PAYMENTS_URL, "delete", {
+        data: { splitters: paymentDetails.state },
+      });
 
-      if(request?.status === 200){
-          setShowDialogAlert(false);
-          setToastInfo(`Split has been cancelled.`);
-          setOpenToast(true);
+      if (request?.status === 200) {
+        setShowDialogAlert(false);
+        setToastInfo(`Split has been cancelled.`);
+        setOpenToast(true);
       }
     }
   };
@@ -44,7 +47,7 @@ const ActiveDetails = () => {
   return (
     <>
       <div className="h-screen pt-32 lg:w-1/2 mx-auto">
-      {useBackButton()}
+        {useBackButton()}
         <div className="p-4 font-[sans-serif] ">
           <h1 className="text-2xl text-white font-bold mb-6">Active Split</h1>
 

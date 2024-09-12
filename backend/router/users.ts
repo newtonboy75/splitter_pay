@@ -8,7 +8,7 @@ import {
 
 export default (router: express.Router) => {
   router.post("/login", authenticateUser);
-  router.post("/logout", logoutUser);
+  router.get("/logout", logoutUser);
   router.post("/register", registerUser);
   router.get("/refresh-token", refeshToken);
 };

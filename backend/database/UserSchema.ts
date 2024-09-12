@@ -16,6 +16,9 @@ const userSchema = new Schema<User>({
     type: String,
     required: true,
   },
+  accessToken: {
+    type: String,
+  },
 });
 
 userSchema.pre("save", async function (next) {

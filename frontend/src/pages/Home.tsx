@@ -47,7 +47,7 @@ const Home = () => {
                   ""
                 )}
 
-                <Suspense>
+                <Suspense fallback={<div>loading... please wait...</div>}>
                   {splitstoPay.map((split, key) => {
                     <h2 className="text-[#ececec] text-left font-extrabold mb-6">
                       Recent Splits
@@ -56,7 +56,7 @@ const Home = () => {
                   })}
                 </Suspense>
 
-                <Suspense>
+                <Suspense fallback={<div>loading... please wait...</div>}>
                   {activeSplitList.length >= 1 && (
                     <h2 className="text-[#ececec] text-left font-extrabold mb-6 mt-16">
                       Active Splits

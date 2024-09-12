@@ -1,4 +1,4 @@
-import { createContext, useState } from "react";
+import { createContext, useEffect, useState } from "react";
 import { AuthContextInterface, UserData } from "../utils/types/interface";
 import { setToken } from "../utils/saveAuth";
 
@@ -27,10 +27,50 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({
   });
 
   if (auth.accessToken !== "") {
-    const { ["password"]: data, ...rest } = auth;
+    const { ...rest } = auth;
     const userData: UserData = rest;
-    setToken(JSON.stringify(userData));
+
+    type PersonWithoutId = Omit<UserData, "accessToken" | "refreshToken">;
+
+    const personWithoutId: PersonWithoutId = {
+      id: userData.id,
+      name: userData.name,
+      email: userData.email,
+    };
+
+    setToken(JSON.stringify(personWithoutId));
   }
+
+  useEffect(() => {
+    // Simulate fetching auth state from storage
+    const storedAuth = sessionStorage.getItem("tempAuthToken");
+    if (storedAuth) {
+      setAuth({
+        ...JSON.parse(storedAuth),
+      });
+    } else {
+      setAuth((prevAuth) => ({
+        ...prevAuth,
+      }));
+      console.log(auth);
+    }
+
+    setTimeout(() => {
+      sessionStorage.removeItem("tempAuthToken");
+    }, 3000);
+  }, []);
+
+  useEffect(() => {
+    // Before unload, store the auth state in sessionStorage
+    const handleBeforeUnload = () => {
+      sessionStorage.setItem("tempAuthToken", JSON.stringify(auth));
+    };
+
+    window.addEventListener("beforeunload", handleBeforeUnload);
+    return () => {
+      window.removeEventListener("beforeunload", handleBeforeUnload);
+    };
+  }, [auth]);
 
   return (
     <AuthContext.Provider value={{ auth, setAuth }}>
