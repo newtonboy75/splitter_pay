@@ -1,6 +1,7 @@
 import { Link } from "react-router-dom";
 import { getToken } from "../../utils/saveAuth";
 import paymentDetails from "../../utils/paymentDetails";
+import he from "he";
 
 const SplitInvite = ({ toPay, key }: any) => {
   const currentUser = getToken();
@@ -12,7 +13,7 @@ const SplitInvite = ({ toPay, key }: any) => {
         <div className="p-6">
           <p className="mt-2 mb-2 text-lg text-gray-500 leading-relaxed">
             {details.initiator} and {details.splitters.length - 1} other
-            splitter/s would like to split the cost for {details.name}, totaling
+            splitter/s would like to split the cost for {he.decode(details.name)}, totaling
             $
             {parseFloat(details.totalAmount).toLocaleString(undefined, {
               maximumFractionDigits: 2,

@@ -14,7 +14,7 @@ export const useAuthInterceptor = () => {
         let token = auth?.accessToken; //check if authToken is set
 
         if (!auth?.accessToken) {
-          //user reloaded, use sessionStorge dta
+          //user reloaded, use sessionStorge saved data
           await new Promise((resolve) => {
             const storedAccessToken = JSON.parse(storedAuth);
 

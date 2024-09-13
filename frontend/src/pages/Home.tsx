@@ -12,7 +12,7 @@ import { useWebSocketHandler } from "../hooks/useWebSocketHandler";
 const Home = () => {
   const currentUser = getToken(); //get current logged user
   const interceptor = useAuthInterceptor(); //axios interceptor
-
+  
   //start Websocket
   const { triggerRefresh, toastInfo, openToast, setOpenToast } =
     useWebSocketHandler("ws://localhost:3000", currentUser);

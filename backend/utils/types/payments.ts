@@ -3,6 +3,8 @@ export interface Payment extends Document {
   amount: string;
   initiatorId: string;
   date: Date;
+  completed?: boolean;
+  completedOn?: Date;
   splitters: [
     {
       id: string;

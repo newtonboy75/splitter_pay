@@ -15,4 +15,5 @@ const ProtectedRoute: React.FC<{ children: React.ReactNode }> = ({
   return children;
 };
 
+
 export default ProtectedRoute;

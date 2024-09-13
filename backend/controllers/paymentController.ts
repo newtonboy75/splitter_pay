@@ -74,8 +74,16 @@ export const getPayments = async (req: Request, res: Response) => {
  * @param req
  * @param res
  */
-export const getPaymentById = async () => {
-  console.log("get all payments here");
+export const getPaymentById = async (req: Request, res: Response) => {
+  const { paymentId } = req.params;
+  try {
+    const payment = await Payment.findById(paymentId);
+    console.log("get all payments here", payment);
+    res.status(200).json(payment);
+  } catch (error) {
+    console.log(error);
+    res.status(400).json("Payment ID does not exist.");
+  }
 };
 
 /**
@@ -156,10 +164,48 @@ export const paySplit = async (req: Request, res: Response) => {
 
     getWss().clients.forEach((client: any) => {
       if (client.readyState === client.OPEN) {
-        console.log("Payment successful");
         client.send(JSON.stringify(message));
       }
     });
+
+    try {
+      const currentSplit = await Payment.findById(id);
+      const numSplitters = currentSplit?.splitters.length;
+
+      const splitersPaid = currentSplit?.splitters.filter((split) => { //check if all splitters have already paid
+        return split.payment_status === 3;
+      });
+
+      if (numSplitters === splitersPaid?.length) { //if yes, update split to completed = true
+        currentSplit!.completed = true;
+        currentSplit!.completedOn = new Date();
+        currentSplit?.save();
+
+        const messageSplitCompleted: ResponseData = {
+          data: {
+            payee: "",
+            share_amount: 0,
+            name: currentSplit?.name!,
+            initiator: "",
+            email: "",
+            initiator_id: currentSplit?.initiatorId!,
+          },
+          to: "initiator",
+          disposition: "split_complete",
+        };
+
+        setTimeout(() => { //sends Split Complete notification after 10 seconds
+          getWss().clients.forEach((client: any) => {
+            if (client.readyState === client.OPEN) {
+              //console.log("Payment successful");
+              client.send(JSON.stringify(messageSplitCompleted));
+            }
+          });
+        }, 10000);
+      }
+    } catch (error) {
+      console.log(error);
+    }
   }
 
   res.status(200).json("Payment successful");

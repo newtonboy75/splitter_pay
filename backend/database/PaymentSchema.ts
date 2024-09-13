@@ -18,6 +18,15 @@ const paymentSchema = new Schema<Payment>({
     type: Date,
     required: false,
   },
+  completed: {
+    type: Boolean,
+    required: false,
+    default: false
+  },
+  completedOn: {
+    type: Date,
+    required: false
+  },
   splitters: [
     {
       id: {

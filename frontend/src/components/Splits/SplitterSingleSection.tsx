@@ -1,6 +1,7 @@
 import avatar1 from "../../assets/avatar.webp"
 import { getToken } from "../../utils/saveAuth";
 import { SplitterSingleSectionProps } from "../../utils/types/interface";
+import he from "he";
 
 const SplitterSingleSection: React.FC<SplitterSingleSectionProps> = ({
   splitDetails,
@@ -18,7 +19,7 @@ const SplitterSingleSection: React.FC<SplitterSingleSectionProps> = ({
         <img src={avatar1} className="w-12 h-12 rounded-full" />
         <div className="ml-4 flex-1">
           <p className="text-md text-gray-800 font-semibold">
-            {splitDetails.name}
+            {he.decode(splitDetails.name)}
           </p>
           {currentUser.name !== splitDetails.name && (
             <p className="text-md text-gray-800">{splitDetails.email}</p>

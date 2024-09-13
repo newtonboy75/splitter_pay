@@ -2,6 +2,7 @@ import { Link } from "react-router-dom";
 import { getToken } from "../../utils/saveAuth";
 import paymentDetails from "../../utils/paymentDetails";
 import useUserAvatar from "../../hooks/useUserAvatar";
+import he from "he";
 
 const SplitsRecent = ({ split, key }: any) => {
   const currentUser = getToken();
@@ -15,7 +16,7 @@ const SplitsRecent = ({ split, key }: any) => {
         className="bg-white shadow-[0_4px_12px_-5px_rgba(0,0,0,0.4)] w-full rounded-lg font-[sans-serif] overflow-hidden mx-auto mt-4 text-left"
       >
         <div className="p-6">
-          <h3 className="text-2xl font-semibold">{split.name}</h3>
+          <h3 className="text-2xl font-semibold">{he.decode(split.name)}</h3>
           <p className="text-2xl  text-gray-500">
             $
             {parseFloat(split.amount).toLocaleString(undefined, {

@@ -1,5 +1,6 @@
 import { useState, useEffect } from "react";
 import useWebSocket from "./useWebSocket";
+import he from "he";
 
 export const useWebSocketHandler = (url: any, current_user: any) => {
   const { lastMessage, readyState } = useWebSocket(url);
@@ -22,23 +23,41 @@ export const useWebSocketHandler = (url: any, current_user: any) => {
 
   const handleWebSocketMessage = (data: any) => {
     if (data.disposition === "split_invite") {
+      //Split invite, user initiated a split
       const initiator = data.data.splitters.filter(
         (splitter: { is_initiator: boolean }) => splitter.is_initiator === true
       );
-      data.data.splitters.map(
-        (invitee: { email: string; is_initiator: boolean }) => {
-          if (invitee.email === current_user.email || initiator.email == current_user.email) {
-            setToastInfo(
-              `${initiator[0]["name"]} would like to split the cost for ${data.data.name} for $${initiator[0]["share_amount"]}`
-            );
-            setOpenToast(true);
+
+      if (initiator[0]["email"] === current_user.email) {
+        setToastInfo(
+          `You have set up a split for ${he.decode(data.data.name)} for ${
+            initiator[0]["share_amount"]
+          }`
+        );
+      } else {
+        data.data.splitters.map(
+          (invitee: { email: string; is_initiator: boolean }) => {
+            if (invitee.email === current_user.email) {
+              setToastInfo(
+                `${
+                  initiator[0]["name"]
+                } would like to split the cost for ${he.decode(
+                  data.data.name
+                )} for $${initiator[0]["share_amount"]}`
+              );
+            }
           }
-        }
-      );
+        );
+      }
+
+      setOpenToast(true);
     } else if (data.disposition === "payment_successful") {
+      //User made payment
       if (data.data.initiator_id === current_user.id) {
         setToastInfo(
-          `Payment of $${data.data.share_amount} was received from ${data.data.payee} for ${data.data.name}.`
+          `Payment of $${data.data.share_amount} was received from ${
+            data.data.payee
+          } for ${he.decode(data.data.name)}.`
         );
         setOpenToast(true);
       }
@@ -58,6 +77,13 @@ export const useWebSocketHandler = (url: any, current_user: any) => {
           }
         }
       );
+    } else if (data.disposition === "split_complete") { //Split has been completed
+      if (data.data.initiator_id === current_user.id) {
+        setToastInfo(
+          `Split for ${he.decode(data.data.name)} has been completed.`
+        );
+        setOpenToast(true);
+      }
     }
 
     setTriggerRefresh((prev) => prev + 1);

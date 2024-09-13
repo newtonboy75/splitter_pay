@@ -5,6 +5,7 @@ import DialogSuccess from "../components/Splits/DialogSuccess";
 import Toast from "../components/Main/Toast";
 import { apiRequest } from "../utils/api/axios";
 import useBackButton from "../hooks/useBackButton";
+import he from "he";
 
 const Checkout = () => {
   const paymentDetails = useLocation();
@@ -14,17 +15,20 @@ const Checkout = () => {
   const [openToast, setOpenToast] = useState(false);
   const [toastInfo, setToastInfo] = useState("");
 
-  //submit checkout 
+  //submit checkout
   const handlePayment = async () => {
-
     const PAYMENTS_URL = `/api/payments/${paymentDetails.state.id}/pay`;
-    const request = await apiRequest(interceptor, PAYMENTS_URL, 'put', paymentDetails.state)
+    const request = await apiRequest(
+      interceptor,
+      PAYMENTS_URL,
+      "put",
+      paymentDetails.state
+    );
 
     setProcessingPayment(true);
-    if(request?.status === 200){
+    if (request?.status === 200) {
       setToastInfo(`Thank you. Your payment has been recieved!`);
       setOpenToast(true);
-      
     }
   };
 
@@ -44,7 +48,7 @@ const Checkout = () => {
               <div className="flex items-center max-sm:flex-col gap-4 max-sm:gap-6">
                 <div className="sm:border-l sm:pl-4 sm:border-gray-300 w-full">
                   <h3 className="text-xl font-bold text-gray-800">
-                    {paymentDetails.state?.name}
+                    {he.decode(paymentDetails.state?.name)}
                   </h3>
 
                   <ul className="mt-4 text-sm text-gray-800 space-y-2 text-left">
@@ -123,7 +127,6 @@ const Checkout = () => {
               {processingPayment
                 ? "Processing payment, please wait..."
                 : "Make Payment"}
-                
             </button>
           </div>
         </div>

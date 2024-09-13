@@ -9,6 +9,7 @@ import http from "http";
 import { UserInfo } from "./utils/types/users";
 import expressWs from "express-ws";
 import { rateLimiter } from "./middleware/rateLimiter";
+import helmet from 'helmet';
 
 dotenv.config();
 
@@ -29,6 +30,7 @@ app.use(cookieParser());
 app.use(express.urlencoded({ extended: true }));
 app.use(errorHandler);
 app.use(rateLimiter);
+app.use(helmet());
 
 //connect to Atlas
 DbConnect();
