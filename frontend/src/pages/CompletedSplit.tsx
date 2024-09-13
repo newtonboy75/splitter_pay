@@ -1,6 +1,7 @@
 import { useLocation } from "react-router-dom";
 import { formatDate } from "../utils/formatDate";
 import useBackButton from "../hooks/useBackButton";
+import he from "he";
 
 const CompletedSplits = () => {
   const paymentDetails = useLocation();
@@ -18,7 +19,7 @@ const CompletedSplits = () => {
               <div className="flex items-center max-sm:flex-col gap-4 max-sm:gap-6">
                 <div className="sm:border-l sm:pl-4 sm:border-gray-300 w-full">
                   <h3 className="text-xl font-bold text-gray-800">
-                    {paymentDetails.state.name}
+                    {he.decode(paymentDetails.state.name)}
                   </h3>
 
                   <ul className="mt-4 text-sm text-gray-800 space-y-2 text-left">
@@ -27,7 +28,9 @@ const CompletedSplits = () => {
                       {paymentDetails.state.email}
                     </li>
 
-                    <li key="inititedby_">Initiated by {paymentDetails.state.initiator}</li>
+                    <li key="inititedby_">
+                      Initiated by {paymentDetails.state.initiator}
+                    </li>
 
                     <li className="font-medium" key="paymentid_">
                       Payment ID: {paymentDetails.state.payment_id}
@@ -40,22 +43,24 @@ const CompletedSplits = () => {
                   <hr className="border-gray-300 my-4" />
 
                   <ul className="text-left text-sm">
-                    <li key="splitters_"> 
+                    <li key="splitters_">
                       <h1 className="text-sm font-medium">Splitters</h1>
                     </li>
                     <li className="p-2" key="splitter_">
-                      {paymentDetails.state.splitters.map((splitter: any, key: any) => {
-                        return (
-                          <div key={key}>
-                            <div className="p-1" key={"key"+key}>
-                              {splitter.name} | {splitter.email}
+                      {paymentDetails.state.splitters.map(
+                        (splitter: any, key: any) => {
+                          return (
+                            <div key={key}>
+                              <div className="p-1" key={"key" + key}>
+                                {splitter.name} | {splitter.email}
+                              </div>
+                              <div className="p-1" key={"key_" + Math.random()}>
+                                Paid on {formattedDateTime}
+                              </div>
                             </div>
-                            <div className="p-1" key={"key_"+Math.random()}>
-                              Paid on {formattedDateTime}
-                            </div>
-                          </div>
-                        );
-                      })}
+                          );
+                        }
+                      )}
                     </li>
                   </ul>
                 </div>
